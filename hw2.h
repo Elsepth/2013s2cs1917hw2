@@ -34,6 +34,10 @@ char   *get_notes( void );
 
 //H - Help
 void    print_help();
+//Q - Quit
+//in main
+
+
 
 //FILE STRUCTURE
 
@@ -51,6 +55,7 @@ case_movef.c
 case_moveb.c
 case_print.c
 case_list.c
+case_remove.c
 case_task.c
 case_date.c
 case_class.c

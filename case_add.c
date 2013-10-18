@@ -78,10 +78,19 @@ int scan_date( Date *d )
 int date_ok( Date *d )
 //  Return 1 if date is valid; 0 otherwise.
 {
-  // INSERT CODE HERE
-
+  if(d->year > 99 || d->year < 0){return 0;}//rejects weird years
+  if(d->month > 12 || d->month < 0){return 0;}//rejects weird months
+  if(d->day < 0){return 0;}//rejects negative days
+  if(d->month == 2){
+	if((d->year % 4) == 0 && (d->year % 100) != 0){
+		if(d->day > 29){return 0;}
+	}elseif(d->day > 28){return 0;}
+  }//rejects leap-year 30+ and otherwise 29+ feb days
+  if(d->month == 4 || d->month == 6 || d->month == 9 || d->month == 11){
+	if(d->day > 30){return 0;}}
+  if(d->day > 31){return 0;}//rejects dates that are out of month
   return 1;
-}
+}/
 
 int get_class( void )
 //   Get class of item from user

@@ -12,7 +12,7 @@ Example: x, y, pages, printCounter
 Function Naming Convention
 ********************************
 Follows Powershell 'cmdlet' convention.
-First letter is capitalised. Two words joined by a dash. 
+First letter of each word is capitalised.
 First word is a verb. Second word is a noun. The noun has the verb done to it. 
 
-Example: Check-Date, Print-List, Remove-Task
+Example: CheckDate, PrintList, RemoveTask

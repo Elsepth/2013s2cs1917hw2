@@ -1,25 +1,26 @@
 #Makefile for Assignment 2
 
-BAKE = gcc -O -Wall -Werror
+ROLL = gcc -O -Wall -Werror
 
-SAUCE = hw2.c tdlist.c
-ICING = tdlist.h
-DOUGH = $(SAUCE:.c=.o)
+SRC = *.c
+HDR = hw2.h tdlist.h
+OBJ = $(SAUCE:.c=.o)
 
-%o:%c	$(ICING)
-	$(BAKE) -c $<
+%o:%c	$(HDR)
+	$(ROLL) -c $<
 
 .PHONY: clean
 .PHONY: clobber
 .PHONY: run
 .PHONY: submit
 
-cake:	$(SAUCE)
-	 $(BAKE) -o hw2 $(SAUCE)
+make:	$(SRC)
+	$(ROLL) -o hw2 $(SRC)
+
 clean:	
-	rm -f $(DOUGH)
+	rm -f $(OBJ)
 clobber:
-	rm -f $(DOUGH) hw2
+	rm -f $(OBJ) hw2
 run:
 	./hw2
 submit:

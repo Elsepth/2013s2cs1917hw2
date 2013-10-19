@@ -2,7 +2,7 @@
    hw2.c
    CS1917 S2/13 Assignment 2: ToDo List Manager
    
-   Han Lin (zXXXXXXXX) and Andrew Wang (z3460759)
+   -IDENT-
 */
 
 #include "hw2.h"

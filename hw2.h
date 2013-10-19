@@ -50,18 +50,18 @@ Makefile
 */
 
 /* Use these to hold the functions used by each case, so we can work on different ones at the same time.
-case_add.c
-case_movef.c
-case_moveb.c
-case_print.c
-case_list.c
-case_remove.c
-case_task.c
-case_date.c
-case_class.c
-case_note.c
-case_search.c
-case_undo.c
-case_help.c
+add.c
+movef.c
+moveb.c
+print.c
+list.c
+remove.c
+task.c
+date.c
+class.c
+note.c
+search.c
+undo.c
+help.c
 */
 

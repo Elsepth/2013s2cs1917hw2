@@ -21,7 +21,8 @@ int main( void )
   TDnode *node;
   int ch;
   int op;
-
+  int print_mode = LIST;
+  
   // enter a loop, reading and executing commands from the user
   while( 1 ) {
 

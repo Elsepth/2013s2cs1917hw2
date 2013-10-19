@@ -10,6 +10,8 @@
 //Definitions
 #define MAX_LINE     128
 #define MAX_TEXT    4096
+#define LIST		0
+#define ITEM		1
 
 //A - Add item
 TDnode *get_node(  void );
@@ -36,7 +38,7 @@ char   *get_notes( void );
 void    print_help();
 //Q - Quit
 //in main
-
+void	print_items(int print_mode);
 
 
 //FILE STRUCTURE

@@ -1,8 +1,9 @@
 /*
    hw2.c
    CS1917 S2/13 Assignment 2: ToDo List Manager
+   -IDENT Info- 
    
-   -IDENT-
+   Framework-y shit for everything else, yo.
 */
 
 #include "hw2.h"
@@ -11,12 +12,13 @@ int main( void )
 {
   TDnode *list = NULL;
   TDnode *node;
-  int ch;
-  int op;
+  int ch; //Used with getchar only, ignore.
+  int op; // Switch Operator
+  int quit=0; //Loop Moderator
   int print_mode = LIST;
   
   // enter a loop, reading and executing commands from the user
-  while( 1 ) {
+  while( quit != 1 ) {
 
     printf("Enter command (A,F,B,P,L,R,T,D,C,N,S,U,Q, H for Help): ");
 
@@ -88,11 +90,11 @@ int main( void )
 
     case 'h': case 'H': // Help
       print_help();
-      break;
 
     case 'q': case 'Q': // Quit
       free_list( list );
       printf("Bye!\n");
+      quit=1 //Sets loop flag to leave loop
       return 0;
 
     }

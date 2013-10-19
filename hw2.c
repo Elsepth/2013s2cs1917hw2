@@ -1,19 +1,11 @@
-/**
+/*
    hw2.c
-
-   Sample program for COMP1917 Computing 1
-
-   Program supplied as a starting point for
-   Assignment 2: ToDo List Manager
-
-   UNSW Session 2, 2013
+   CS1917 S2/13 Assignment 2: ToDo List Manager
+   
+   Han Lin (zXXXXXXXX) and Andrew Wang (z3460759)
 */
 
 #include "hw2.h"
-
-
-
-
 
 int main( void )
 {

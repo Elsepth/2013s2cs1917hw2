@@ -1,1 +1,18 @@
 So this is a readme file. Or something like that.
+
+Variable Naming Convention
+********************************
+Follows standard Style Guide conventions. 
+Initial character is always lower-case, all other 'words' in a name are capitalised for clarity.
+
+Example: x, y, pages, printCounter
+
+
+
+Function Naming Convention
+********************************
+Follows Powershell 'cmdlet' convention.
+First letter is capitalised. Two words joined by a dash. 
+First word is a verb. Second word is a noun. The noun has the verb done to it. 
+
+Example: Check-Date, Print-List, Remove-Task

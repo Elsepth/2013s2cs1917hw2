@@ -1,5 +1,6 @@
-
 //A - Add item
+
+void AddItem (something){
 
 TDnode * get_node( void )
 //   allocate space for new ToDo item; get task, date, class, notes from user.

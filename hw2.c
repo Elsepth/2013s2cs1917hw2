@@ -99,8 +99,7 @@ int main( void )
       break;
 
     case 'h': case 'H': // Displays Help
-      printf("The '[H]elp' command has not been implemented yet.\n");
-      //PrintHelp
+      PrintHelp();
       break;
 
     default: //Catch-all for other inputs

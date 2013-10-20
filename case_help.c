@@ -1,6 +1,7 @@
 //H - Help
+#include <stdio.h>
 
-void print_help()
+void PrintHelp()
 //   Print list of commands, and a brief summary of their functions.
 {
   printf("\n");

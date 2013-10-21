@@ -15,6 +15,7 @@ int main( void )
   TDnode *list = NULL;
   TDnode *node;
   TDnode *cursor;
+  TDnode *temp
   int ch; //Used with getchar only, ignore.
   int op; // Switch Operator
   int quit=0; //Loop Moderator
@@ -34,7 +35,16 @@ int main( void )
 
     case 'a': case 'A': // Add new task
       printf("The '[A]dd new task' command has not been implemented yet.\n");
-      //NewTask;
+      *temp = TDnode * get_node();
+      *node = *list;
+      while temp->date > node->date {GOTO next node;}
+      
+      temp->next = *node;
+      temp->prev = node->prev;
+      node->prev = *temp;
+      *node = temp->prev;
+      node->next = *temp;
+      
       break;
 
     case 'f': case 'F': // Move Forward

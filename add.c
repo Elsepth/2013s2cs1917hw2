@@ -17,11 +17,13 @@ TDnode * get_node( void )
   }
 
   printf("\n");
+  new_node->prev = NULL;
   new_node->task = get_task();
   get_date( &new_node->date );
   new_node->class = get_class();
   new_node->notes = get_notes();
-
+  new_node->next = NULL;
+  
   return( new_node );
 }
 

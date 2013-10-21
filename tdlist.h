@@ -19,6 +19,7 @@ struct date {
 };
 
 struct tdnode {
+  TDnode *prev;
   char *task;
   Date  date;
   int   class;

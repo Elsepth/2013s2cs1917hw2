@@ -14,6 +14,7 @@ int main( void )
 {
   TDnode *list = NULL;
   TDnode *node;
+  TDnode *cursor;
   int ch; //Used with getchar only, ignore.
   int op; // Switch Operator
   int quit=0; //Loop Moderator

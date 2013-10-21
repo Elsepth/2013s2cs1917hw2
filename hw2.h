@@ -14,6 +14,7 @@
 #define ITEM		1
 
 //A - Add item
+void AddItem ( void );
 TDnode *get_node(  void );
 char   *get_task(  void );
 void    get_date( Date *d );

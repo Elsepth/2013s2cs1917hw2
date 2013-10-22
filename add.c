@@ -1,9 +1,5 @@
 //A - Add item
 
-*list is an address that points to the first node
-list the first node
-what is the address of the address of the first node stored at *list?
-
 void AddItem ( TDnode * node , TDnode * cursor ){
 	//malloc a new TDnode at *newNode
 	TDnode *temp;

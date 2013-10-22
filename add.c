@@ -52,10 +52,26 @@ void AddItem ( TDnode * node , TDnode * cursor ){
 	return;
 }
 
-IsDateEarlier ( TDnode *earlier, TDnode *later){
+int IsDateEarlier ( TDnode *eins, TDnode *zwei){//is eins earlier than zwei?
 	//If false, return 0
 	//if true, return 1
 	//if equal, return 2
+	if (eins->date->year < zwei->date->year){
+		return 1;
+	}if (eins->date->year > zwei->date->year){
+		return 0;
+	}
+	if (eins->date->month < zwei->date->month){
+		return 1;
+	}if (eins->date->month > zwei->date->month){
+		return 0;
+	}
+	if (eins->date->day < zwei->date->day){
+		return 1;
+	}if (eins->date->day > zwei->date->day){
+		return 0;
+	}
+	return 2;
 }
 
 

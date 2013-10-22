@@ -28,7 +28,7 @@ void AddItem ( TDnode * node , TDnode * cursor ){
 		//if temp is the same date as node
 		if (priori == 2){
 			//if temp is an earlier class, insert it now
-			if (temp->class > node->class){
+			if (temp->class < node->class){
 				temp->next = node;
 				temp->prev = node->prev;
 				node->prev = temp;

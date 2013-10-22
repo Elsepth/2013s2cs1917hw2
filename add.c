@@ -1,10 +1,66 @@
 //A - Add item
-/*
-void AddItem ( void ){
-  TDnode *newNode;
-  *newnode = TDnode * get node ();0
+
+*list is an address that points to the first node
+list the first node
+what is the address of the address of the first node stored at *list?
+
+void AddItem ( TDnode * node , TDnode * cursor ){
+	//malloc a new TDnode at *newNode
+	TDnode *temp;
+	temp = TDnode * get node (); 
+	//if there are no nodes, insert, point cursor, return
+	if (node = NULL){
+		node = temp;
+		cursor = temp;
+		return;
+	}
+	//if can insert in front; insert, point cursor, return
+	for ( ; node->next != NULL ; node = node->next ){
+		int priori = IsDateEarlier (temp, node);
+		//if temp is earlier than node - insert it now
+		if (priori == 1){
+			temp->next = node;
+			temp->prev = node->prev;
+			node->prev = temp;
+			if (temp->prev != NULL){
+				node = temp->prev;
+				node->next = temp;
+			}
+			cursor = temp;
+			return;
+		}
+		//if temp is the same date as node
+		if (priori == 2){
+			//if temp is an earlier class, insert it now
+			if (temp->class > node->class){
+				temp->next = node;
+				temp->prev = node->prev;
+				node->prev = temp;
+				if (temp->prev != NULL){
+					node = temp->prev;
+					node->next = temp;
+				}
+				cursor = temp;
+				return;
+			}
+		}
+	}
+	//the next node is null, insert, point cursor, return
+	node->next = temp;
+	temp->prev = node;
+	cursor = temp;
+	return;
 }
-*/
+
+IsDateEarlier ( TDnode *earlier, TDnode *later){
+	//If false, return 0
+	//if true, return 1
+	//if equal, return 2
+}
+
+
+
+
 TDnode * get_node( void )
 //   allocate space for new ToDo item; get task, date, class, notes from user.
 {

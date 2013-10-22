@@ -14,7 +14,8 @@
 #define ITEM		1
 
 //A - Add item
-void AddItem ( void );
+void AddItem ( TDnode * node , TDnode * cursor );
+int IsDateEarlier ( TDnode *priori, TDnode *posteriori);
 TDnode *get_node(  void );
 char   *get_task(  void );
 void    get_date( Date *d );

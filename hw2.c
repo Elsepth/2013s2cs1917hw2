@@ -39,24 +39,29 @@ int main( void )
       break;
 
     case 'f': case 'F': // Move Forward
-      printf("The 'move [F]orward' command has not been implemented yet.\n");
+      //printf("The 'move [F]orward' command has not been implemented yet.\n");
+      if (cursor->next != NULL){cursor = cursor->next;}
       //MoveDown;
       break;
 
     case 'b': case 'B': // Move Back
-      printf("The 'move [B]ack' command has not been implemented yet.\n");
+      //printf("The 'move [B]ack' command has not been implemented yet.\n");
+      if (cursor->prev != NULL){cursor = cursor->prev;}
       //MoveUp
       break;
 
     case 'p': case 'P': // Switch to Print Item mode
-      printFormat='P';
-      printf("Successfully switched to [P]rint Item mode.\nJokes on you, printing hasn't been implemented yet. :D\n");
+      //printFormat='P';
+      listMode = 0;
+      printf("Successfully switched to [P]rint Item mode.\n");
       break;
 
     case 'l': case 'L': // Switch to List mode
-      printFormat='L';
-      printf("Successfully switched to Print [L]ist mode.\nJokes on you, printing hasn't been implemented yet. :D\n");
+      //printFormat='L';
+      listMode = 1;
+      printf("Successfully switched to Print [L]ist mode.\n");
       break;
+      //Jokes on you, printing hasn't been implemented yet. :D
 
     case 'r': case 'R': // Remove Task
       printf("The '[R]emove task' command has not been implemented yet.\n");

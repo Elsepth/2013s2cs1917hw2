@@ -40,8 +40,13 @@ char   *get_notes( void );
 void    print_help();
 //Q - Quit
 //in main
-void	print_items(int print_mode);
 
+//void	print_items(int print_mode);
+
+void  PrintList(TDnode * list, TDnode * cursor);
+void  PrintItem(TDnode * c);
+void  PrintDate(Date d, int x);
+void  PrintClass(int class, int x);
 
 //FILE STRUCTURE
 

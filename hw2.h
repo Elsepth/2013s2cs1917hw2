@@ -14,7 +14,7 @@
 #define ITEM		1
 
 //A - Add item
-void AddItem ( TDnode * node , TDnode * cursor );
+void AddItem ( TDnode *node , TDnode *cursor );
 int IsDateEarlier ( TDnode *eins, TDnode *zwei);
 TDnode *get_node(  void );
 char   *get_task(  void );
@@ -24,11 +24,12 @@ int     date_ok(  Date *d );
 int     get_class( void );
 char   *get_notes( void );
 
-//F - move Forward
-//B - move Back
-//P - Print item
-//L - List items
+//F - move Forward - no functions
+//B - move Back - no functions
+//P - Print item - no functions
+//L - List items - no functions
 //R - Remove item
+TDnode *RemoveItem (TDnode *cursor);
 //T - change Task
 //D - change Date
 //C - change Class
@@ -43,8 +44,8 @@ void    print_help();
 
 //void	print_items(int print_mode);
 //main.c - functions for int main
-void  PrintList(TDnode * list, TDnode * cursor);
-void  PrintItem(TDnode * c);
+void  PrintList(TDnode *list, TDnode *cursor);
+void  PrintItem(TDnode *c);
 void  PrintDate(Date d, int x);
 void  PrintClass(int class, int x);
 

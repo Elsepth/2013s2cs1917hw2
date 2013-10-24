@@ -42,7 +42,7 @@ void    print_help();
 //in main
 
 //void	print_items(int print_mode);
-
+//main.c - functions for int main
 void  PrintList(TDnode * list, TDnode * cursor);
 void  PrintItem(TDnode * c);
 void  PrintDate(Date d, int x);
@@ -60,8 +60,7 @@ Makefile
 
 /* Use these to hold the functions used by each case, so we can work on different ones at the same time.
 add.c
-movef.c
-moveb.c
+move.c //merge forward and backwards
 print.c
 list.c
 remove.c
@@ -72,5 +71,7 @@ note.c
 search.c
 undo.c
 help.c
+
+main.c
 */
 

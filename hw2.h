@@ -29,11 +29,11 @@ char   *get_notes( void );
 //P - Print item - no functions
 //L - List items - no functions
 //R - Remove item
-TDnode *RemoveItem (TDnode *cursor);
+TDnode *RemoveItem (TDnode *list, TDnode *cursor);
 //T - change Task
 //D - change Date
 //C - change Class
-//N - change Notes
+//N - change Notes //merge these four into one file ???
 //S - Search
 //U - Undo
 

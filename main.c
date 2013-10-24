@@ -1,4 +1,3 @@
-
 //Print List function
 void PrintList(TDnode * list, TDnode * cursor){
 	TDnode * node;
@@ -58,6 +57,6 @@ void PrintClass(int class, int x){
 	default:
 		printf("Invalid Class");
 	}
-	printf("\n");
+	if (x==1){printf("\n");}
 	return;
 }

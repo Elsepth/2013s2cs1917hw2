@@ -18,17 +18,24 @@
    free all the memory occupied by a
    linked list of ToDo items.
 */
-void free_list( TDnode *head )
+void FreeList( TDnode *head )
 {
   TDnode *node;
 
   while( head != NULL ) {
     node = head;
     head = head->next;
-    free( node->task );
-    free( node->notes );
-    free( node );
+//    free( node->task );
+//    free( node->notes );
+//    free( node );
+   FreeNode ( node );
   }
 }
 
+void FreeNode ( TDnode *node )
+{
+   free( node->task );
+   free( node->notes );
+   free( node );
+}
 // INSERT NEW FUNCTIONS, AS APPROPRIATE

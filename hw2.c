@@ -18,7 +18,8 @@ int main( void )
   int ch; //Used with getchar only, ignore.
   int op; // Switch Operator
   int quit=0; //Loop Moderator
-  char printFormat = 'L'; //Sets starting output format to 'List' form 
+  //char printFormat = 'L'; //Sets starting output format to 'List' form 
+  int listMode = 1; //0 is false, ie. item mode. (I can never remember whether I or P for item mode.)
   
   //Loop asks user for input until given the command to quit
   while( quit != 1 ) {
@@ -106,6 +107,11 @@ int main( void )
     default: //Catch-all for other inputs
       printf("Invalid input. Please try again or enter H for Help.\n");
 
+    }
+    if(listMode==1){
+      PrintList(list, cursor);
+    }else{
+      PrintItem(cursor);
     }
   }
 }

@@ -27,6 +27,6 @@ struct tdnode {
   TDnode *next;
 };
 
-void free_list( TDnode *list );
-
+void FreeList( TDnode *head );
+void FreeNode( TDnode *node );
 // INSERT NEW FUNCTION PROTOTYPES, AS APPROPRIATE

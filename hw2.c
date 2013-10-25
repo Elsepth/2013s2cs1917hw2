@@ -9,22 +9,21 @@
 */
 
 #include "hw2.h"
+void InitialiseX(X *x){
+	x->first = NULL; x->last = NULL; x->cursor = NULL; x->prev = NULL; //set pointers
+	malloc x->backup; //TODO
+	x->hist = NULL; x->list = TRUE; x->print = TRUE; x->edit = NULL; //set flags
+return;}
 
 int main( void )
 {
-	Item *list = NULL;
-	//Item *node;
-	Item *cursor;
+	X x;
+	InitialiseX(&x);
+	
 	int ch; //Used with getchar only, ignore.
 	int op; // Switch Operator
 	int quit=0; //Loop Moderator
-	//char printFormat = 'L'; //Sets starting output format to 'List' form 
-	int listMode = 1; //0 is false, ie. item mode. (I can never remember whether I or P for item mode.)
-	int printMode = 0; //if it's 0, the loop won't print anything. Successful actions set to 1.
-	
-	char historyFlag = NULL; // = [A,F,B,R,T,D,C,N,NULL]
-	Item *backupNode; //store the previous iteration of any changed value here.
-	Item *nodeHistory; //address of the last modified node, or the node selected before an add action.
+
 	
 	//Loop asks user for input until given the command to quit
 	while( quit != 1 ) {
@@ -35,88 +34,50 @@ int main( void )
 		while( !isalpha(ch) &&( ch != '\n' )) {ch = getchar();}
 		op = ch;
 		while( ch != '\n' ) {ch = getchar();} //Ignores further user input until 'Enter' is pressed
-
+		//do the thing to make op an uppercase character
 		switch( op ) {
 
-		case 'a': case 'A': // Add new task
-			//printf("The '[A]dd new task' command has not been implemented yet.\n");
-			nodeHistory = cursor;
-			AddItem ( list , cursor );
-			historyFlag = 'A';
-			printMode = 1;
+		case 'A': // Add new task
+			InsertItem(&x, MakeItem);
 			break;
 
-		case 'f': case 'F': // Move Forward
-			if (cursor->next != NULL){
-				cursor = cursor->next;
-				historyFlag = 'F';
-				printMode = 1;
-			}
+		case 'F': // Move Forward
+			MoveForward(&x);
+			break;
+		case 'B': // Move Back
+			MoveBackward(&x);
 			break;
 
-		case 'b': case 'B': // Move Back
-			if (cursor->prev != NULL){
-				cursor = cursor->prev;
-				historyFlag = 'B';
-				printMode = 1;
-			}
+		case 'P': // Switch to Print Item mode
+			ItemMode(&x);
+			break;
+		case 'L': // Switch to List mode
+			ListMode(&x);
 			break;
 
-		case 'p': case 'P': // Switch to Print Item mode
-			//printFormat='P';
-			listMode = 0;
-			printMode = 1;
-			printf("Successfully switched to [P]rint Item mode.\n");
+		case 'R': // Remove Task
+			RemoveItem(&x);
 			break;
 
-		case 'l': case 'L': // Switch to List mode
-			//printFormat='L';
-			listMode = 1;
-			printMode = 1;
-			printf("Successfully switched to Print [L]ist mode.\n");
+		case 'T': // Edit Task Name
+			EditItem(&x, 'T');
 			break;
-			//Jokes on you, printing hasn't been implemented yet. :D
-
-		case 'r': case 'R': // Remove Task
-			printf("The '[R]emove task' command has not been implemented yet.\n");
-			FreeNode(backupNode); //the backup, if not used, becomes the new history storage
-			backupNode = cursor;
-			RemoveItem(list, cursor);
-			historyFlag = 'R';
-			printMode = 1;
-			//RemoveTask
+		case 'D': // Edit Task Date
+			EditItem(&x, 'D');
 			break;
-
-		case 't': case 'T': // Edit Task Name
-			printf("The 'change [t]ask' command has not been implemented yet.\n");
-			printMode = 1;
-			//EditTaskname
+		case 'C': // Edit Task Class
+			EditItem(&x, 'C');
 			break;
-
-		case 'd': case 'D': // Edit Task Date
-			printf("The 'change [D]ate' command has not been implemented yet.\n");
-			printMode = 1;
-			//EditDate
+		case 'N': // Edit Task Notes
+			EditItem(&x, 'N');
 			break;
-
-		case 'c': case 'C': // Edit Task Class
-			printf("The 'change [C]lass' command has not been implemented yet.\n");
-			printMode = 1;
-			//EditClass
-			break;
-
-		case 'n': case 'N': // Edit Task Notes
-			printf("The 'change [N]otes' command has not been implemented yet.\n");
-			printMode = 1;
-			//EditNotes
-			break;
-
-		case 's': case 'S': // Searches for a text string
+			
+		case 'S': // Searches for a text string
 			printf("The 'change [S]earch' command has not been implemented yet.\n");
 			//FindTask
 			break;
 
-		case 'u': case 'U': // Undoes last action
+		case 'U': // Undoes last action
 			//printf("The '[U]ndo' command has not been implemented yet. So you're fucked.\n");
 			if (historyFlag != NULL){
 				Undo(historyFlag, backupNode, nodeHistory, list, cursor);
@@ -126,14 +87,14 @@ int main( void )
 			//UndoLastaction
 			break;
 
-		case 'q': case 'Q': // Quit Program
+		case 'Q': // Quit Program
 			// free_list( list );
 			printf("Bye!\n");
 			quit=1; //Sets loop flag to leave loop
 			return (0);
 			break;
 
-		case 'h': case 'H': // Displays Help
+		case 'H': // Displays Help
 			PrintHelp();
 			break;
 

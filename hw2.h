@@ -1,17 +1,59 @@
 //hw2.h
-
 //Header includes
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
-
-#include "tdlist.h"
-
 //Definitions
 #define MAX_LINE		 128
 #define MAX_TEXT		4096
-#define LIST		0
-#define ITEM		1
+#define FALSE		0
+#define TRUE		1
+typedef struct x X;
+typedef struct item Item;
+typedef char Flag;
+struct item {
+	Item *prev;
+	Item *next;
+	short data[4];
+	char *task;
+	char *notes;
+};
+
+struct x {
+	Item *first; //beginning of list
+	Item *last; //end of list
+	Item *cursor; //currently selected item
+	Item *prev; //previously selected item(before Add)
+	Item *backup; //stores the data changed by Change or Remove
+	Flag hist; // = [A,F,B,R,T,D,C,N,NULL]
+	Flag list; //0 is false, ie. item mode. (I can never remember whether I or P for item mode.)
+	Flag print; //if it's 0, the loop won't print anything. Successful actions set to 1.
+	Flag edit; //[T,D,C,N] what the EditItem function edits
+};
+
+//Linked List Operations
+void FreeList( Item *head );
+void FreeItem( Item *node );
+
+Itemhotep()//summons an egyptian goddess
+
+void InitialiseX(X x);
+
+
+Item *MakeItem();//makes a new item, and gets the things for it, and returns the &
+	GetTask(Item *item);
+	GetDate(Item *item);
+		IsDateValid();
+	GetClass(Item *item);
+	GetNotes(Item *item);
+void InsertItem(X *x, Item *item);//inserts an item into list, and puts the & into x
+//parses data as a long, and compares it with a simple greater than operation to see whether to move on or place it here.
+void MoveForward(X *x);
+void MoveBackward(X *x);
+void ItemMode(X *x);
+void ListMode(X *x);
+void RemoveItem(X *x);
+void EditItem(X *x, char edit); //char edit is a
 
 //A - Add item
 void	AddItem ( Item *node , Item *cursor );
@@ -24,49 +66,18 @@ int		DateOk(	Date *d );
 int		GetClass( void );
 char	*GetNotes( void );
 
-//F - move Forward - no functions
-//B - move Back - no functions
-//P - Print item - no functions
-//L - List items - no functions
-//R - Remove item
 Item	*RemoveItem (Item *list, Item *cursor);
-//T - change Task
-//D - change Date
-//C - change Class
-//N - change Notes //merge these four into one file ???
-//S - Search
-//U - Undo
-void	Undo(char historyFlag, Item *backupNode, Item *nodeHistory, Item *list, Item *cursor);
-//H - Help
-void	print_help();
-//Q - Quit
-//in main
 
-//void	print_items(int print_mode);
-//main.c - functions for int main
+void	Undo(char historyFlag, Item *backupNode, Item *nodeHistory, Item *list, Item *cursor);
+
+void	print_help();
+
+//in main
 void	PrintList(Item *list, Item *cursor);
 void	PrintItem(Item *c);
 void	PrintDate(Date d, int x);
 void	PrintClass(int class, int x);
 
-//FILE STRUCTURE
 
-/* Core files
-hw2.c
-hw2.h
-tdlist.c
-tdlist.h //maybe these two can be incorporated into the other files somehow?
-Makefile
-*/
 
-/* Use these to hold the functions used by each case, so we can work on different ones at the same time.
-add.c
-remove.c
-change.c
-search.c
-undo.c
-help.c
-
-main.c
-*/
 

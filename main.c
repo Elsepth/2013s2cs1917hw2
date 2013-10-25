@@ -3,7 +3,7 @@ void PrintList(TDnode * list, TDnode * cursor){
 	TDnode * node;
 	for (node = list; node != NULL; node = node->next){
 		if(cursor==node){printf("->");}
-		else{printf("  ")}
+		else{printf("	")}
 		
 		PrintDate(c->date, 0);
 		PrintClass(c->class, 0);
@@ -15,7 +15,7 @@ void PrintList(TDnode * list, TDnode * cursor){
 
 //Print Item function
 void PrintItem(TDnode * c){
-	printf("Task:  %s\n",c->task);
+	printf("Task:	%s\n",c->task);
 	PrintDate(c->date, 1);
 	PrintClass(c->class, 1);
 	printf("Notes: %s\n",c->notes);
@@ -60,3 +60,6 @@ void PrintClass(int class, int x){
 	if (x==1){printf("\n");}
 	return;
 }
+
+MoveForward
+MoveBack

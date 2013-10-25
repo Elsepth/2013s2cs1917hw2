@@ -8,13 +8,14 @@
 //REMOVE: //put the removed entry into backup. Free it the next cycle, so it can be recovered.
 //CHANGE: //store the old value in TDnode *backup. Recall it if necessary.
 
-//variable declarations
-char historyFlag; // = [A,F,B,R,T,D,C,N,NULL]
+/*variable declarations 
+char historyFlag; = // [A,F,B,R,T,D,C,N,NULL]
 TDnode *backupNode; //store the previous iteration of any changed value here.
 TDnode *nodeHistory; //address of the last modified node, or the node selected before an add action.
+*/
 
 //prototype declaration
-void Undo(char historyFlag, TDnode *backupNode, TDnode *nodeHistory, TDnode *list, TDnode *cursor);
+//void Undo(char historyFlag, TDnode *backupNode, TDnode *nodeHistory, TDnode *list, TDnode *cursor);
 
 //function
 void Undo(char historyFlag, TDnode *backupNode, TDnode *nodeHistory, TDnode *list, TDnode *cursor){
@@ -25,15 +26,15 @@ void Undo(char historyFlag, TDnode *backupNode, TDnode *nodeHistory, TDnode *lis
 			break;
 		
 		case F:
-			MoveBack(cursor);
+			cursor = cursor->prev;
 			break;
 		
 		case B:
-			MoveForward(cursor);
+			cursor = cursor->next;
 			break;
 		
 		case R:
-			InsertItem(list, backupNode) //inserts backupNode into the list. Split AddItem into CreateItem and InsertItem.
+			InsertItem(list, backupNode) //inserts backupNode into the list. Split AddItem into CreateItem(GetNode) and InsertItem.
 			break;
 		
 		case T:

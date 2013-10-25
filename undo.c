@@ -20,45 +20,39 @@ TDnode *nodeHistory; //address of the last modified node, or the node selected b
 //function
 void Undo(char historyFlag, TDnode *backupNode, TDnode *nodeHistory, TDnode *list, TDnode *cursor){
 	switch( historyFlag ){
-		case A:
+		case 'A':
 			RemoveItem(list, cursor);
 			cursor = nodeHistory; //puts the cursor back where it used to be
 			break;
 		
-		case F:
+		case 'F':
 			cursor = cursor->prev;
 			break;
 		
-		case B:
+		case 'B':
 			cursor = cursor->next;
 			break;
 		
-		case R:
+		case 'R':
 			InsertItem(list, backupNode) //inserts backupNode into the list. Split AddItem into CreateItem(GetNode) and InsertItem.
 			break;
 		
-		case T:
+		case 'T':
 			cursor->task = backupNode->task;
 			break;
 		
-		case D:
+		case 'D':
 			cursor->date = backupNode->date;
 			break;
 		
-		case C:
+		case 'C':
 			cursor->class = backupNode->class;
 			break;
 		
-		case N:
+		case 'N':
 			cursor->notes = backupNode->notes;
 			break;
 		
 	}
 	historyFlag = NULL;
-}
-
-//int main code
-if (historyFlag != NULL){
-	Undo(historyFlag, backup, nodeHistory);
-	//also possibly a flag to prevent printing anything this cycle.
 }

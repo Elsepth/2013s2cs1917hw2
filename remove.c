@@ -29,6 +29,5 @@ TDnode *RemoveItem (TDnode *list, TDnode *cursor){
 		cursor = item->next;
 		cursor->prev = item->prev;
 	}
-	FreeNode( item );
 	return;
 }

@@ -60,6 +60,3 @@ void PrintClass(int class, int x){
 	if (x==1){printf("\n");}
 	return;
 }
-
-MoveForward
-MoveBack

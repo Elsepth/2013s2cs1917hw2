@@ -1,14 +1,36 @@
+
+void FreeList( Item *list ){ //DONE
+  Item *item;
+
+  while( list != NULL ) {
+    item = list;
+    list = list->next;
+//    free( node->task );
+//    free( node->notes );
+//    free( node );
+   FreeItem ( item );
+  }
+}
+void FreeItem ( Item *item ){ //DONE
+   free( item->task );
+   free( item->notes );
+   free( item );
+}
+
+
 void Itemhotep( void );//summons an egyptian goddess
 
-
-void InitialiseX(X *x){
+void InitialiseX(X *x){ //DONE
 	x->first = NULL; x->last = NULL; x->cursor = NULL; x->prev = NULL; //set pointers
-	malloc x->backup; //TODO
+	x->backup = (Item *)malloc( sizeof( Item ));
+	if( x->backup == NULL ) {
+		 printf("Error: could not allocate memory.\n");
+		 exit( 1 );
+	}
 	x->hist = NULL; x->list = TRUE; /*x->print = TRUE;*/ x->edit = NULL; //set flags
 return;}
 
-Item *MakeItem();//makes a new item, and gets the things for it, and returns the &
-{
+Item *MakeItem( void );{ //DONE
 		Item *newItem = (Item *)malloc( sizeof( Item ));
 	if( newItem == NULL ) {
 		 printf("Error: could not allocate memory.\n");
@@ -19,12 +41,11 @@ Item *MakeItem();//makes a new item, and gets the things for it, and returns the
 	newItem->prev = NULL;
 	newItem->next = NULL;
 	newItem->task = GetTask();
-	GetDate( &newItem->data );
-	GetClass( &newItem->data );
+	GetDate( &newItem );
+	GetClass( &newItem );
 	newItem->notes = GetNotes();
 	return( newItem );
 }
-
 char * GetTask( void ){
 	char buffer[MAX_TEXT];
 	char *task;
@@ -94,17 +115,17 @@ char * GetNotes( void ){
 
 	return( notes );
 }
-void GetDate( Item *item ){
+void GetDate( Item *item ){ //DONE???
 	printf("Date:	");
-/*	while( !ScanDate( item->data ) || !DateOk( item->data )) {
+	while( !ScanDate( item->data ) || !IsDateValid( item->data )) {
 		 printf("Re-enter date in format dd/mm/yy: ");
 	} */
-	char s[MAX_LINE];
-	fgets( s, MAX_LINE, stdin );
-	if(sscanf(s,"%d/%d/%d", &item->data[2], &item->data[1], &item->data[0] )==3);
+	//char s[MAX_LINE];
+	//fgets( s, MAX_LINE, stdin );
+	//if(sscanf(s,"%d/%d/%d", &item->data[2], &item->data[1], &item->data[0] )==3);
 
-}//TODO TODO TODO
-/*
+}//???
+
 int ScanDate( char *data[4] )
 //	scan date in the format dd/mm/yy
 {
@@ -112,26 +133,8 @@ int ScanDate( char *data[4] )
 
 	fgets( s, MAX_LINE, stdin );
 	return(
-		 sscanf(s,"%d/%d/%d", &item->data[2], &item->data[1], &item->data[0] )==3);
+		 sscanf(s,"%d/%d/%d", &item->data[DD], &item->data[MM], &item->data[YY] )==3);
 }
-int DateOk( char *data[4] )
-//	Return 1 if date is valid; 0 otherwise.
-{
-	if(d->year > 99 || d->year < 0){return 0;}//rejects weird years
-	if(d->month > 12 || d->month < 0){return 0;}//rejects weird months
-	if(d->day < 0){return 0;}//rejects negative days
-	if(d->month == 2){
-	if((d->year % 4) == 0 && (d->year % 100) != 0){
-		if(d->day > 29){return 0;}
-	}elseif(d->day > 28){return 0;}
-	}//rejects leap-year 30+ and otherwise 29+ feb days
-	if(d->month == 4 || d->month == 6 || d->month == 9 || d->month == 11){
-	if(d->day > 30){return 0;}}
-	if(d->day > 31){return 0;}//rejects dates that are out of month
-	return 1;
-}/
-*/
-
 
 int IsDateValid( short data[4] ){ //DONE?
 	if(data[YY] > 99 || data[YY] < 0){return 0;}//rejects weird years
@@ -258,25 +261,37 @@ void RemoveItem(X *x){ //DONE
 	x->hist = 'R';
 	return;
 }
-void EditItem(X *x, int restore){ //TODO
-	if (restore == FALSE){
-	//back up everything
-	}else{
-	//restore the thing
-	}
-	switch(x->edit){
+void EditItem(X *x, char edit){ //DONE
+	if(x->backup != NULL;){
+	FreeItem( x->backup );}
+	x->backup = x->cursor;
+	
+	switch(edit){
 		case 'T': get new task, overwrite
+			x->cursor->task = GetTask();
+			break;
+		
 		case 'D': get new date, ovewrite
+			GetDate( &x->cursor );
+			break;
+		
 		case 'C': get new class, overwrite
+			GetClass( &x->cursor );
+			break;
+		
 		case 'N': get new note, overwrite
+			x->cursor->notes = GetNotes();
+			break;
 	}
-	x->hist = x->edit;
+	x->hist = edit;
 	//x->print = TRUE;
 }
+
+
 void Search(X *x){//TODO
 
 }
-void Undo(X *x){ //Might need fixing
+void Undo(X *x){ //DONE
 	switch( x->hist ){
 		case 'A':
 			RemoveItem(x);
@@ -292,23 +307,26 @@ void Undo(X *x){ //Might need fixing
 			break;
 		
 		case 'R':
-			RestoreItem(x); //inserts backupNode into the list. Split AddItem into CreateItem(GetNode) and InsertItem.
+			InsertItem(x, x->backup); //inserts backup back into the list.
+			x->backup = NULL;
 			break;
 		
 		case 'T':
-			EditItem(x, TRUE);
+			x->cursor->task = x->backup->task;
 			break;
 		
 		case 'D':
-			cursor->date = backupNode->date;
+			x->cursor->data[YY] = x->backup->data[YY];
+			x->cursor->data[MM] = x->backup->data[MM];
+			x->cursor->data[DD] = x->backup->data[DD];
 			break;
 		
 		case 'C':
-			cursor->class = backupNode->class;
+			x->cursor->data[CLASS] = x->backup->data[CLASS];
 			break;
 		
 		case 'N':
-			cursor->notes = backupNode->notes;
+			x->cursor->notes = x->backup->notes;
 			break;
 		
 		default:
@@ -316,6 +334,8 @@ void Undo(X *x){ //Might need fixing
 			break;
 	}
 	historyFlag = NULL;
+}
+
 }
 void Quit(X *x){ //TODO
 

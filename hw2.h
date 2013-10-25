@@ -17,7 +17,7 @@ typedef struct x X;
 typedef struct item Item;
 typedef char Flag;
 struct item {
-	short data[4];
+	short data[4]; //in order; Year, Month, Day, and Class. Together they form a long for easy sorting.
 	Item *prev;
 	Item *next;
 	char *task;
@@ -33,7 +33,7 @@ struct x {
 	Flag hist; // = [A,F,B,R,T,D,C,N,NULL]
 	Flag list; //0 is false, ie. item mode. (I can never remember whether I or P for item mode.)
 	//Flag print; //if it's 0, the loop won't print anything. Successful actions set to 1.
-	Flag edit; //[T,D,C,N] what the EditItem function edits
+	//Flag edit; //[T,D,C,N] what the EditItem function edits
 };
 
 //Linked List Operations
@@ -45,7 +45,7 @@ void Itemhotep( void );//summons an egyptian goddess
 void InitialiseX( X x );
 
 
-Item *MakeItem();//makes a new item, and gets the things for it, and returns the &
+Item *MakeItem( void );//makes a new item, and gets the things for it, and returns the &
 	char GetTask( Item *item );
 	char GetNotes(Item *item);
 	void GetDate( Item *item );
@@ -61,7 +61,6 @@ void RemoveItem(X *x);
 void EditItem(X *x, int restore);
 void Search(X *x);
 void Undo(X *x);
-void RestoreItem(X *x);
 void Quit(X *x);
 void Help(X *x);
 

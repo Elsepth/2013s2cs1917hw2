@@ -9,11 +9,7 @@
 */
 
 #include "hw2.h"
-void InitialiseX(X *x){
-	x->first = NULL; x->last = NULL; x->cursor = NULL; x->prev = NULL; //set pointers
-	malloc x->backup; //TODO
-	x->hist = NULL; x->list = TRUE; x->print = TRUE; x->edit = NULL; //set flags
-return;}
+
 
 int main( void )
 {
@@ -73,18 +69,11 @@ int main( void )
 			break;
 			
 		case 'S': // Searches for a text string
-			printf("The 'change [S]earch' command has not been implemented yet.\n");
-			//FindTask
+			Search(&x);
 			break;
 
 		case 'U': // Undoes last action
-			//printf("The '[U]ndo' command has not been implemented yet. So you're fucked.\n");
-			if (historyFlag != NULL){
-				Undo(historyFlag, backupNode, nodeHistory, list, cursor);
-				//also possibly a flag to prevent printing anything this cycle.
-				printMode = 1;
-			}
-			//UndoLastaction
+			Undo(&x);
 			break;
 
 		case 'Q': // Quit Program
@@ -95,14 +84,15 @@ int main( void )
 			break;
 
 		case 'H': // Displays Help
-			PrintHelp();
+			Help(&x);
 			break;
 
 		default: //Catch-all for other inputs
 			printf("Invalid input. Please try again or enter H for Help.\n");
 
 		}
-		if(printMode==1){
+		//if(printMode==1){
+		//if(op==AFBPLRTDCNU){//TODO: Make this work.
 			if(listMode==1){
 				PrintList(list, cursor);
 			}else{

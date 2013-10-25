@@ -17,9 +17,9 @@ typedef struct x X;
 typedef struct item Item;
 typedef char Flag;
 struct item {
+	short data[4];
 	Item *prev;
 	Item *next;
-	short data[4];
 	char *task;
 	char *notes;
 };

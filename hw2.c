@@ -91,14 +91,14 @@ int main( void )
 			printf("Invalid input. Please try again or enter H for Help.\n");
 
 		}
-		//if(printMode==1){
+		//if(x.print==TRUE){
 		//if(op==AFBPLRTDCNU){//TODO: Make this work.
-			if(listMode==1){
-				PrintList(list, cursor);
+			if(x.list==TRUE){
+				PrintList(&x);
 			}else{
-				PrintItem(cursor);
+				PrintItem(&x);
 			}
-			printMode = 0;
+			//x.print = FALSE;
 		}
 	}
 }

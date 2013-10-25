@@ -182,8 +182,31 @@ void GetClass( short data[4] ){ //DONE
 	}
 	return;
 }
-void InsertItem(X *x, Item *item){
-
+void InsertItem(X *x, Item *item){ //DONE
+	x->prev = x->cursor;
+	long *idA = item;
+	long *idX;
+	x->hist = 'A';
+	for(x->cursor = x->first; x->cursor != NULL; x->cursor = x->cursor->next ){
+		idX = x->cursor;
+		if(idA < idX){
+			//if (x->cursor == x->first){}//insert it at the beginning
+			//else{} //insert it
+			item->next = x->cursor;
+			item->prev = x->cursor->prev;
+			x->cursor->prev = item;
+			if(item->prev != NULL){item->prev->next = item;}
+			else{x->first = item;}
+			x->cursor = item;
+			return;
+		}
+	}
+	//insert it at the end
+	x->last->next = item;
+	item->prev = x->last;
+	x->last = item;
+	x->cursor = item;
+	return;
 }//inserts an item into list, and puts the & into x
 //parses data as a long, and compares it with a simple greater than operation to see whether to move on or place it here.
 void MoveForward(X *x){ //DONE
@@ -211,7 +234,8 @@ void ListMode(X *x){ //DONE
 	return;
 }
 void RemoveItem(X *x){ //DONE
-	FreeItem( x->backup );//the current item doesn't need to be freed since
+	if(x->backup != NULL;){
+	FreeItem( x->backup );}//the current item doesn't need to be freed since
 	x->backup = x->cursor; //it's renameed backup and freed next action
 	
 	if( x->cursor == NULL ){ //error list is empty
@@ -325,64 +349,65 @@ void Help(X *x){ //DONE
 
 
 //Print List function
-void PrintList(Item * list, Item * cursor){
-	Item * node;
-	for (node = list; node != NULL; node = node->next){
-		if(cursor==node){printf("->");}
+void PrintList(X *x){ //DONE
+	Item *swap = x->cursor;
+	for (x->cursor = x->first; x->cursor != NULL; x->cursor = x->cursor->next){
+		if(x->cursor==swap){printf("->");}
 		else{printf("	")}
+		PrintDate(x);
+		PrintClass(x);
+		printf(" %s\n",x->cursor->task);
 		
-		PrintDate(c->date, 0);
-		PrintClass(c->class, 0);
-		printf(" %s\n",c->task);
-		
-		node = node->next;
 	}
+	x->cursor = swap;
 }
 
 //Print Item function
-void PrintItem(Item * c){
-	printf("Task:	%s\n",c->task);
-	PrintDate(c->date, 1);
-	PrintClass(c->class, 1);
-	printf("Notes: %s\n",c->notes);
+void PrintItem(X *x){ //DONE
+	printf("Task:	%s\n",x->current->task);
+	PrintDate(x);
+	PrintClass(x);
+	printf("Notes: %s\n",x->current->notes);
 }
 
-void PrintDate(Date d, int x){ //x for eXtended mode, ie. single item
-	if (x==1){printf("Date: ");}
-	printf(" %2d/%2d/%2d",d->day, d->month, d->year);
+void PrintDate(X *x){ //DONE
+	if (x->list==FALSE){printf("Date: ");}
+	printf(" %2d/%2d/%2d", x->cursor->data[DD], x->cursor->data[MM], x->cursor->data[YY]);
+	return;
 }
 
-void PrintClass(int class, int x){
-	if (x==1){printf("\nClass: ");}
-	switch( class ){
+void PrintClass(X *x){ //DONE
+	if (x->list==FALSE){printf("\nClass: ");}
+	
+	switch( x->cursor->data[CLASS] ){
 	
 	case 1: //High
 		printf("H");
-		if (x==0){break;}
+		if (x->list==FALSE){break;}
 		printf("igh");
 		break;
 	
 	case 2: //Medium
 		printf("M");
-		if (x==0){break;}
+		if (x->list==FALSE){break;}
 		printf("edium");
 		break;
 	
 	case 3: //Low
 		printf("L");
-		if (x==0){break;}
+		if (x->list==FALSE){break;}
 		printf("ow");
 		break;
 	
 	case 4: //Completed
 		printf("C");
-		if (x==0){break;}
+		if (x->list==FALSE){break;}
 		printf("ompleted");
 		break;
 	
 	default:
 		printf("Invalid Class");
 	}
-	if (x==1){printf("\n");}
+	if (x->list==FALSE){printf("\n");}
 	return;
 }

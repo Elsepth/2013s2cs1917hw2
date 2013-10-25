@@ -1,10 +1,10 @@
 //R - Remove item
-TDnode *RemoveItem (TDnode *list, TDnode *cursor){
+Item *RemoveItem (Item *list, Item *cursor){
 	if(list == NULL){ //The Empty Set
 		return;
 	}
 	
-	TDnode *item;
+	Item *item;
 	item = cursor;
 	
 	if(item->prev == NULL && item->next == NULL){ //The list has one entry

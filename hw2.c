@@ -12,9 +12,9 @@
 
 int main( void )
 {
-	TDnode *list = NULL;
-	//TDnode *node;
-	TDnode *cursor;
+	Item *list = NULL;
+	//Item *node;
+	Item *cursor;
 	int ch; //Used with getchar only, ignore.
 	int op; // Switch Operator
 	int quit=0; //Loop Moderator
@@ -23,8 +23,8 @@ int main( void )
 	int printMode = 0; //if it's 0, the loop won't print anything. Successful actions set to 1.
 	
 	char historyFlag = NULL; // = [A,F,B,R,T,D,C,N,NULL]
-	TDnode *backupNode; //store the previous iteration of any changed value here.
-	TDnode *nodeHistory; //address of the last modified node, or the node selected before an add action.
+	Item *backupNode; //store the previous iteration of any changed value here.
+	Item *nodeHistory; //address of the last modified node, or the node selected before an add action.
 	
 	//Loop asks user for input until given the command to quit
 	while( quit != 1 ) {

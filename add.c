@@ -1,8 +1,8 @@
 //A - Add item
 
-void AddItem ( TDnode *node , TDnode *cursor ){
-	//malloc a new TDnode at *newNode
-	TDnode *temp;
+void AddItem ( Item *node , Item *cursor ){
+	//malloc a new Item at *newNode
+	Item *temp;
 	temp = GetNode(); 
 	//if there are no nodes, insert, point cursor, return
 	if (node = NULL){
@@ -13,7 +13,7 @@ void AddItem ( TDnode *node , TDnode *cursor ){
 	InsertItem(temp, node);
 }
 
-void InsertItem( TDnode *node, TDnode *temp){ //insert temp in list node
+void InsertItem( Item *node, Item *temp){ //insert temp in list node
 	//if can insert in front; insert, point cursor, return
 	for ( ; node->next != NULL ; node = node->next ){
 		int priori = IsDateEarlier (temp, node);
@@ -52,7 +52,7 @@ void InsertItem( TDnode *node, TDnode *temp){ //insert temp in list node
 	return;
 }
 
-int IsDateEarlier ( TDnode *first, TDnode *second){//is first earlier than second?
+int IsDateEarlier ( Item *first, Item *second){//is first earlier than second?
 	//If false, return 0
 	//if true, return 1
 	//if equal, return 2
@@ -77,12 +77,12 @@ int IsDateEarlier ( TDnode *first, TDnode *second){//is first earlier than secon
 
 
 
-TDnode * GetNode( void )
+Item * GetNode( void )
 //	 allocate space for new ToDo item; get task, date, class, notes from user.
 {
-	TDnode * new_node;
+	Item * new_node;
 
-	new_node = (TDnode *)malloc( sizeof( TDnode ));
+	new_node = (Item *)malloc( sizeof( Item ));
 	if( new_node == NULL ) {
 		 printf("Error: could not allocate memory.\n");
 		 exit( 1 );

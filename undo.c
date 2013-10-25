@@ -1,4 +1,5 @@
-//U - Undo//logic for history
+//U - Undo
+//logic for history
 
 //Undo adds, forward, back, remove, change task date class notes. 
 //For each function, the data is required.
@@ -6,19 +7,19 @@
 //FORE: //go back
 //BACK: //go forward
 //REMOVE: //put the removed entry into backup. Free it the next cycle, so it can be recovered.
-//CHANGE: //store the old value in TDnode *backup. Recall it if necessary.
+//CHANGE: //store the old value in Item *backup. Recall it if necessary.
 
 /*variable declarations 
 char historyFlag; = // [A,F,B,R,T,D,C,N,NULL]
-TDnode *backupNode; //store the previous iteration of any changed value here.
-TDnode *nodeHistory; //address of the last modified node, or the node selected before an add action.
+Item *backupNode; //store the previous iteration of any changed value here.
+Item *nodeHistory; //address of the last modified node, or the node selected before an add action.
 */
 
 //prototype declaration
-//void Undo(char historyFlag, TDnode *backupNode, TDnode *nodeHistory, TDnode *list, TDnode *cursor);
+//void Undo(char historyFlag, Item *backupNode, Item *nodeHistory, Item *list, Item *cursor);
 
 //function
-void Undo(char historyFlag, TDnode *backupNode, TDnode *nodeHistory, TDnode *list, TDnode *cursor){
+void Undo(char historyFlag, Item *backupNode, Item *nodeHistory, Item *list, Item *cursor){
 	switch( historyFlag ){
 		case 'A':
 			RemoveItem(list, cursor);

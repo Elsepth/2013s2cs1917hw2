@@ -1,6 +1,6 @@
 //Print List function
-void PrintList(TDnode * list, TDnode * cursor){
-	TDnode * node;
+void PrintList(Item * list, Item * cursor){
+	Item * node;
 	for (node = list; node != NULL; node = node->next){
 		if(cursor==node){printf("->");}
 		else{printf("	")}
@@ -14,7 +14,7 @@ void PrintList(TDnode * list, TDnode * cursor){
 }
 
 //Print Item function
-void PrintItem(TDnode * c){
+void PrintItem(Item * c){
 	printf("Task:	%s\n",c->task);
 	PrintDate(c->date, 1);
 	PrintClass(c->class, 1);

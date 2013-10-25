@@ -9,8 +9,8 @@
    UNSW Session 2, 2013
 */
 
-typedef struct  date  Date;
-typedef struct tdnode TDnode;
+typedef struct date  Date;
+typedef struct item Item;
 
 struct date {
   int day;
@@ -18,15 +18,17 @@ struct date {
   int year;
 };
 
-struct tdnode {
-  TDnode *prev;
+struct item {
+  Item *prev;
+  Item *next;
+  int   id;
+  
   char *task;
   Date  date;
   int   class;
   char *notes;
-  TDnode *next;
 };
 
-void FreeList( TDnode *head );
-void FreeNode( TDnode *node );
+void FreeList( Item *head );
+void FreeNode( Item *node );
 // INSERT NEW FUNCTION PROTOTYPES, AS APPROPRIATE

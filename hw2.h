@@ -14,38 +14,38 @@
 #define ITEM		1
 
 //A - Add item
-void AddItem ( TDnode *node , TDnode *cursor );
-int IsDateEarlier ( TDnode *first, TDnode *second);
-TDnode *GetNode(	void );
-char	 *GetTask(	void );
-void		GetDate( Date *d );
+void	AddItem ( Item *node , Item *cursor );
+int		IsDateEarlier ( Item *first, Item *second);
+Item	*GetNode( void );
+char	*GetTask( void );
+void	GetDate( Date *d );
 int		ScanDate( Date *d );
-int		 DateOk(	Date *d );
-int		 GetClass( void );
-char	 *GetNotes( void );
+int		DateOk(	Date *d );
+int		GetClass( void );
+char	*GetNotes( void );
 
 //F - move Forward - no functions
 //B - move Back - no functions
 //P - Print item - no functions
 //L - List items - no functions
 //R - Remove item
-TDnode *RemoveItem (TDnode *list, TDnode *cursor);
+Item	*RemoveItem (Item *list, Item *cursor);
 //T - change Task
 //D - change Date
 //C - change Class
 //N - change Notes //merge these four into one file ???
 //S - Search
 //U - Undo
-void Undo(char historyFlag, TDnode *backupNode, TDnode *nodeHistory, TDnode *list, TDnode *cursor);
+void	Undo(char historyFlag, Item *backupNode, Item *nodeHistory, Item *list, Item *cursor);
 //H - Help
-void		print_help();
+void	print_help();
 //Q - Quit
 //in main
 
 //void	print_items(int print_mode);
 //main.c - functions for int main
-void	PrintList(TDnode *list, TDnode *cursor);
-void	PrintItem(TDnode *c);
+void	PrintList(Item *list, Item *cursor);
+void	PrintItem(Item *c);
 void	PrintDate(Date d, int x);
 void	PrintClass(int class, int x);
 
@@ -61,14 +61,8 @@ Makefile
 
 /* Use these to hold the functions used by each case, so we can work on different ones at the same time.
 add.c
-move.c //merge forward and backwards
-print.c
-list.c
 remove.c
-task.c
-date.c
-class.c
-note.c
+change.c
 search.c
 undo.c
 help.c

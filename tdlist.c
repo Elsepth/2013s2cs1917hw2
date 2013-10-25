@@ -18,9 +18,9 @@
    free all the memory occupied by a
    linked list of ToDo items.
 */
-void FreeList( TDnode *head )
+void FreeList( Item *head )
 {
-  TDnode *node;
+  Item *node;
 
   while( head != NULL ) {
     node = head;
@@ -32,7 +32,7 @@ void FreeList( TDnode *head )
   }
 }
 
-void FreeNode ( TDnode *node )
+void FreeNode ( Item *node )
 {
    free( node->task );
    free( node->notes );

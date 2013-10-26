@@ -1,28 +1,18 @@
-#Makefile for Assignment 2
-
-ROLL = gcc -O -Wall -Werror
-
-SRC = *.c
-HDR = hw2.h tdlist.h
-OBJ = $(SAUCE:.c=.o)
-
-%o:%c	$(HDR)
-	$(ROLL) -c $<
-
-.PHONY: clean
-.PHONY: clobber
+.PHONY: debug
 .PHONY: run
-.PHONY: submit
+.PHONY: clear
+.PHONY: edit
 
-make:	$(SRC)
-	$(ROLL) -o hw2 $(SRC)
+make: clear all.c
+	gcc -o run.out all.c
 
-clean:	
-	rm -f $(OBJ)
-clobber:
-	rm -f $(OBJ) hw2
+debug:
+	gdb run.out
+clear:
+	clear
 run:
-	./hw2
-submit:
-	give cs1917 hw2 Makefile *.[ch]
+	./run.out
+edit:
+	vim Makefile
+
 

@@ -1,6 +1,173 @@
-//Readability: Use an editor such as Notepad++ that allows collapsing. The entire page takes one screen collapsed.
+//all.c
 
-#include "hw2.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <ctype.h>
+//Definitions
+#define MAX_LINE		 128
+#define MAX_TEXT		4096
+#define FALSE		0
+#define TRUE		1
+#define YY		0
+#define MM		1
+#define DD		2
+#define CLASS	3
+
+typedef struct x X;
+typedef struct item Item;
+typedef char Flag;
+struct item {
+	short data[4]; //in order; Year, Month, Day, and Class. Together they form a long for easy sorting.
+	Item *prev;
+	Item *next;
+	char *task;
+	char *notes;
+};
+
+struct x {
+	Item *first; //beginning of list
+	Item *last; //end of list
+	Item *cursor; //currently selected item
+	Item *prev; //previously selected item(before Add)
+	Item *backup; //stores the data changed by Change or Remove
+	Flag hist; // = [A,F,B,R,T,D,C,N,NULL]
+	Flag list; //0 is false, ie. item mode. (I can never remember whether I or P for item mode.)
+	//Flag print; //if it's 0, the loop won't print anything. Successful actions set to 1.
+	//Flag edit; //[T,D,C,N] what the EditItem function edits
+};
+
+//Linked List Operations
+void FreeList( Item *list );
+void FreeItem( Item *item );
+//void Itemhotep( void );//summons an egyptian goddess
+
+void InitialiseX( X* x );
+
+void InsertItem(X *x, Item *item);
+Item *MakeItem( void );//makes a new item, and gets the things for it, and returns the &
+char *GetTask( void );
+char *GetNotes( void );
+void GetDate( Item *item );
+int  ScanDate( Item* item );
+int  IsDateValid( short data[4] );
+void GetClass(  Item *item );
+
+void MoveForward( X *x );
+void MoveBackward( X *x );
+
+void ItemMode( X *x );
+void ListMode( X *x );
+
+void RemoveItem( X *x );
+void EditItem( X *x, char edit );
+//void Search( X *x );
+void Undo( X *x );
+
+
+//void Quit( X *x );
+void Help( X *x );
+void PrintList( X *x );
+void PrintItem( X *x );
+void PrintDate( X *x );
+void PrintClass( X *x );
+
+
+int main( void )
+{
+	X x;
+	InitialiseX(&x);
+	
+	int ch; //Used with getchar only, ignore.
+	int op; // Switch Operator
+	int quit=0; //Loop Moderator
+
+	
+	//Loop asks user for input until given the command to quit
+	while( quit != 1 ) {
+
+		printf("Enter command (A,F,B,P,L,R,T,D,C,N,S,U,Q, H for Help): ");
+
+		ch = getchar();
+		while( !isalpha(ch) &&( ch != '\n' )) {ch = getchar();}
+		op = ch;
+		while( ch != '\n' ) {ch = getchar();} //Ignores further user input until 'Enter' is pressed
+		//do the thing to make op an uppercase character
+		switch( op ) {
+
+		case 'A': // Add new task
+			InsertItem(&x, (MakeItem()));
+			break;
+
+		case 'F': // Move Forward
+			MoveForward(&x);
+			break;
+		case 'B': // Move Back
+			MoveBackward(&x);
+			break;
+
+		case 'P': // Switch to Print Item mode
+			ItemMode(&x);
+			break;
+		case 'L': // Switch to List mode
+			ListMode(&x);
+			break;
+
+		case 'R': // Remove Task
+			RemoveItem(&x);
+			break;
+
+		case 'T': // Edit Task Name
+			EditItem(&x, 'T');
+			break;
+		case 'D': // Edit Task Date
+			EditItem(&x, 'D');
+			break;
+		case 'C': // Edit Task Class
+			EditItem(&x, 'C');
+			break;
+		case 'N': // Edit Task Notes
+			EditItem(&x, 'N');
+			break;
+			
+		case 'S': // Searches for a text string
+			//Search(&x); broken
+			break;
+
+		case 'U': // Undoes last action
+			Undo(&x);
+			break;
+
+		case 'Q': // Quit Program
+			// free_list( list );
+			printf("Bye!\n");
+			quit=1; //Sets loop flag to leave loop
+			return (0);
+			break;
+
+		case 'H': // Displays Help
+			Help(&x);
+			break;
+
+		default: //Catch-all for other inputs
+			printf("Invalid input. Please try again or enter H for Help.\n");
+
+		}
+		//if(x.print==TRUE){
+		//if(op==AFBPLRTDCNU){//DONE: Make this work.
+		switch(x.hist){ //necessitates that all functions set x->hist
+			case 'A': case'F': case'B': case'P': case'L': case'R': case'T': case'D': case'C': case'N': case'U':
+				if(x.list==TRUE){
+					PrintList(&x);
+				}else{
+					PrintItem(&x);
+				}break;
+			//x.print = FALSE;
+		}
+	}
+}
+
+
+
 
 void FreeList( Item *list ){ //DONE
   Item *item;
@@ -28,18 +195,18 @@ void InitialiseX( X *x ){ //DONE
 		 printf("Error: could not allocate memory.\n");
 		 exit( 1 );
 	}
-	x->hist = NULL; x->list = TRUE; /*x->print = TRUE;*/ x->edit = NULL; //set flags
+	x->hist = '0'; x->list = TRUE; /*x->print = TRUE; x->edit = NULL; *///set flags
 return;}
 
 void InsertItem( X *x, Item *item ){ //DONE
 	//inserts an item into list, and puts the & into x
 	//parses data as a long, and compares it with a simple greater than operation to see whether to move on or place it here.
 	x->prev = x->cursor;
-	long *idA = item;
+	long *idA = item->data;
 	long *idX;
 	x->hist = 'A';
 	for(x->cursor = x->first; x->cursor != NULL; x->cursor = x->cursor->next ){
-		idX = x->cursor;
+		idX = x->cursor->data;
 		if(idA < idX){
 			//if (x->cursor == x->first){}//insert it at the beginning
 			//else{} //insert it
@@ -59,7 +226,7 @@ void InsertItem( X *x, Item *item ){ //DONE
 	x->cursor = item;
 	return;
 }
-Item *MakeItem( void );{ //DONE
+Item *MakeItem( void ){ //DONE
 		Item *newItem = (Item *)malloc( sizeof( Item ));
 	if( newItem == NULL ) {
 		 printf("Error: could not allocate memory.\n");
@@ -70,8 +237,8 @@ Item *MakeItem( void );{ //DONE
 	newItem->prev = NULL;
 	newItem->next = NULL;
 	newItem->task = GetTask();
-	GetDate( &newItem );
-	GetClass( &newItem );
+	GetDate( newItem );
+	GetClass( newItem );
 	newItem->notes = GetNotes();
 	return( newItem );
 }
@@ -146,20 +313,33 @@ char * GetNotes( void ){
 }
 void GetDate( Item *item ){ //DONE???
 	printf("Date:	");
-	while( !ScanDate( item->data ) || !IsDateValid( item->data )) {
-		 printf("Re-enter date in format dd/mm/yy: ");
-	} */
+	while( !ScanDate( item ) || !IsDateValid( item->data )) {
+	
+	//int d1 = (ScanDate( item ));
+	//int d2 = (IsDateValid( item->data ));
+	//while (d1 != 1 || d2 != 1){
+	//int d1 = (ScanDate( item ));
+	//int d2 = (IsDateValid( item->data ));
+	printf("Re-enter date in format dd/mm/yy: ");
+	}
 	//char s[MAX_LINE];
 	//fgets( s, MAX_LINE, stdin );
 	//if(sscanf(s,"%d/%d/%d", &item->data[2], &item->data[1], &item->data[0] )==3);
 
 }//???
-int ScanDate( short *data[4] ){ //	scan date in the format dd/mm/yy
+int ScanDate( Item* item ){ //	scan date in the format dd/mm/yy ddddd
 	char s[MAX_LINE];
 
 	fgets( s, MAX_LINE, stdin );
-	return(
-		 sscanf(s,"%d/%d/%d", &data[DD], &data[MM], &data[YY] )==3);
+	//short day, month, year;
+	return (sscanf(s, "%d/%d/%d", item->data[DD], item->data[MM], item->data[YY])==3);
+	//int nums = (sscanf(s, "%d/%d/%d", &day, &month, &year)==3);
+	//item->data[0] = day;
+	//item->data[1] = month;
+	//item->data[2] = year;
+	//if (nums == 3){return 0;}else{return 10;}
+	
+	//return(sscanf(s,"%d/%d/%d", &data[DD], &data[MM], &data[YY] )==3);
 }
 int IsDateValid( short data[4] ){ //DONE?
 	if(data[YY] > 99 || data[YY] < 0){return 0;}//rejects weird years
@@ -173,41 +353,44 @@ int IsDateValid( short data[4] ){ //DONE?
 	if(data[MM] == 4 || data[MM] == 6 || data[MM] == 9 || data[MM] == 11){
 		if(data[DD] > 30){return 0;}}
 	if(data[DD] > 31){return 0;}//rejects dates that are out of month
+	printf("Valid\n");
 	return 1;
 }
-void GetClass( short data[4] ){ //DONE
+void GetClass( Item *item ){ //DONE
 
 	char s[MAX_LINE];
-	data[3] = 0;
+	//item->data[3] = 0;
+	short class = 0;
 	int i;
 
 	printf("Class: ");					 // prompt user
 	fgets( s, MAX_LINE, stdin ); // scan a line of input
 	// keep scanning until class is successfully entered
-	while( data[3] == 0 ) {
+	while( class == 0 ) {
 		 // scan input for first non-space character
 		 for( i=0;( i<MAX_LINE )&&( isspace(s[i])); i++ )
 				;
 
 		 switch( s[i] ) {
 			 case 'h': case 'H':	// High
-					data[3] = 1;
+					class = 1;
 					break;
 			 case 'm': case 'M':	// Medium
-					data[3] = 2;
+					class = 2;
 					break;
 			 case 'l': case 'L':	// Low
-					data[3] = 3;
+					class = 3;
 					break;
 			 case 'c': case 'C':	// Completed
-					data[3] = 4;
+					class = 4;
 					break;
 		 }
-		 if( data[3] == 0 ) {
+		 if( class == 0 ) {
 			 printf("Enter H,M,L or C: ");
 			 fgets( s, MAX_LINE, stdin );
 		 }
 	}
+	item->data[3] = class;
 	return;
 }
 
@@ -238,7 +421,7 @@ void ListMode( X *x ){ //DONE
 }
 
 void RemoveItem( X *x ){ //DONE
-	if(x->backup != NULL;){
+	if(x->backup != NULL){
 		FreeItem( x->backup );
 	}//the current item doesn't need to be freed since
 	x->backup = x->cursor; //it's renameed backup and freed next action
@@ -266,7 +449,7 @@ void RemoveItem( X *x ){ //DONE
 }
 
 void EditItem( X *x, char edit ){ //DONE
-	if(x->backup != NULL;){
+	if(x->backup != NULL){
 		FreeItem( x->backup );
 	}
 	x->backup = x->cursor;
@@ -277,11 +460,11 @@ void EditItem( X *x, char edit ){ //DONE
 			break;
 		
 		case 'D': //get new date, ovewrite
-			GetDate( &x->cursor );
+			GetDate( x->cursor );
 			break;
 		
 		case 'C': //get new class, overwrite
-			GetClass( &x->cursor );
+			GetClass( x->cursor );
 			break;
 		
 		case 'N': //get new note, overwrite
@@ -317,7 +500,7 @@ void Undo( X *x ){ //DONE
 	switch( x->hist ){
 		case 'A':
 			RemoveItem(x);
-			cursor = nodeHistory; //puts the cursor back where it used to be
+			x->cursor = x->prev; //puts the cursor back where it used to be
 			break;
 		
 		case 'F':
@@ -352,11 +535,11 @@ void Undo( X *x ){ //DONE
 			break;
 		
 		default:
-			if( x->hist == NULL ){printf("ERROR: Cannot undo. No History.");
+			if( x->hist == '0' ){printf("ERROR: Cannot undo. No History.");
 			}else{printf("ERROR: Cannot undo. Action not supported.");}
 			break;
 	}
-	historyFlag = 'U';
+	x->hist = 'U';
 }
 
 void Quit( X *x ){ //TODO
@@ -392,7 +575,7 @@ void PrintList( X *x ){ //DONE
 	Item *swap = x->cursor;
 	for (x->cursor = x->first; x->cursor != NULL; x->cursor = x->cursor->next){
 		if(x->cursor==swap){printf("->");}
-		else{printf("	")}
+		else{printf("	");}
 		PrintDate(x);
 		PrintClass(x);
 		printf(" %s\n",x->cursor->task);
@@ -402,10 +585,10 @@ void PrintList( X *x ){ //DONE
 }
 
 void PrintItem( X *x ){ //DONE
-	printf("Task:	%s\n",x->current->task);
+	printf("Task:	%s\n",x->cursor->task);
 	PrintDate(x);
 	PrintClass(x);
-	printf("Notes: %s\n",x->current->notes);
+	printf("Notes: %s\n",x->cursor->notes);
 }
 
 void PrintDate( X *x ){ //DONE
@@ -449,3 +632,4 @@ void PrintClass( X *x ){ //DONE
 	if (x->list==FALSE){printf("\n");}
 	return;
 }
+

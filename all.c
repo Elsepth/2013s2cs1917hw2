@@ -220,10 +220,14 @@ void InsertItem( X *x, Item *item ){ //DONE
 		}
 	}
 	//insert it at the end
-	x->last->next = item;
-	item->prev = x->last;
+	if (x->last != NULL){
+		x->last->next = item;
+		item->prev = x->last;
+	}
 	x->last = item;
 	x->cursor = item;
+	if (x->first == NULL){
+	x->first = item;}
 	return;
 }
 Item *MakeItem( void ){ //DONE
@@ -237,7 +241,10 @@ Item *MakeItem( void ){ //DONE
 	newItem->prev = NULL;
 	newItem->next = NULL;
 	newItem->task = GetTask();
-	GetDate( newItem );
+	//GetDate( newItem );
+	newItem->data[0] = 13;
+	newItem->data[1] = 10;
+	newItem->data[2] = 26;
 	GetClass( newItem );
 	newItem->notes = GetNotes();
 	return( newItem );
@@ -250,7 +257,7 @@ char * GetTask( void ){
 	int i;
 
 	// prompt user for input
-	printf( "Task:	" );
+	printf( "Task:  " );
 	// skip any intial newline character
 	if(( ch = getchar()) == '\n' ) {
 		 ch = getchar();
@@ -311,6 +318,7 @@ char * GetNotes( void ){
 
 	return( notes );
 }
+/*
 void GetDate( Item *item ){ //DONE???
 	printf("Date:	");
 	while( !ScanDate( item ) || !IsDateValid( item->data )) {
@@ -327,7 +335,8 @@ void GetDate( Item *item ){ //DONE???
 	//if(sscanf(s,"%d/%d/%d", &item->data[2], &item->data[1], &item->data[0] )==3);
 
 }//???
-/*
+
+
 int ScanDate( Item* item ){ //	scan date in the format dd/mm/yy ddddd
 	char s[MAX_LINE];
 
@@ -360,12 +369,16 @@ int ScanDate (Item* item){
 	
 	
 }*/
-int ScanDate (Item* item) {
-	int i; int k;
-	char s[9];
-	for(i=0;i<9;i++){
-		s[i]=getchar();
-		putchar(s[i]);
+/*int ScanDate (Item* item) {
+	int i = 0;
+	char s[MAX_LINE];
+	char c = getchar();	*/
+	//while(i=0;i<9;i++){	
+	/*
+	while(c != EOF && i < 128){
+		c = getchar();
+		putchar(c);
+		s[i]=c;
 		switch(i){
 			case 0: case 1: case 3: case 4: case 6: case 7:
 				if( !isdigit(s[i]) ){return 0;}
@@ -377,15 +390,18 @@ int ScanDate (Item* item) {
 			case 8:
 				if (s[i]!=EOF){return 0;}
 				break;
+			default:
+				return 0;
+				break;
 		}
 	}
 	item->data[DD] = (10*s[0]) + s[1];
 	item->data[MM] = (10*s[3]) + s[4];
 	item->data[YY] = (10*s[6]) + s[7];
 	return 1;
-}
+}*/
 
-
+/*
 int IsDateValid( char data[4] ){ //DONE?
 	if(data[YY] > 99 || data[YY] < 0){return 0;}//rejects weird years
 	if(data[MM] > 12 || data[MM] < 1){return 0;}//rejects weird months
@@ -401,6 +417,7 @@ int IsDateValid( char data[4] ){ //DONE?
 	printf("Valid\n");
 	return 1;
 }
+*/
 void GetClass( Item *item ){ //DONE
 
 	char s[MAX_LINE];
@@ -439,14 +456,14 @@ void GetClass( Item *item ){ //DONE
 	return;
 }
 
-void MoveForward( X *x ){ //DONE
+void MoveForward( X *x ){ //DONE STABLE
 	if(x->last != x->cursor){
 		x->prev = x->cursor;
 		x->cursor = x->cursor->next;
 		x->hist = 'F';
 	}
 }
-void MoveBackward( X *x ){ //DONE
+void MoveBackward( X *x ){ //DONE STABLE
 	if(x->first != x->cursor){
 		x->prev = x->cursor;
 		x->cursor = x->cursor->prev;
@@ -505,7 +522,7 @@ void EditItem( X *x, char edit ){ //DONE
 			break;
 		
 		case 'D': //get new date, ovewrite
-			GetDate( x->cursor );
+			//GetDate( x->cursor );
 			break;
 		
 		case 'C': //get new class, overwrite
@@ -620,7 +637,7 @@ void PrintList( X *x ){ //DONE
 	Item *swap = x->cursor;
 	for (x->cursor = x->first; x->cursor != NULL; x->cursor = x->cursor->next){
 		if(x->cursor==swap){printf("->");}
-		else{printf("	");}
+		else{printf("  ");}
 		PrintDate(x);
 		PrintClass(x);
 		printf(" %s\n",x->cursor->task);
@@ -630,7 +647,7 @@ void PrintList( X *x ){ //DONE
 }
 
 void PrintItem( X *x ){ //DONE
-	printf("Task:	%s\n",x->cursor->task);
+	printf("Task:  %s\n",x->cursor->task);
 	PrintDate(x);
 	PrintClass(x);
 	printf("Notes: %s\n",x->cursor->notes);
@@ -638,7 +655,7 @@ void PrintItem( X *x ){ //DONE
 
 void PrintDate( X *x ){ //DONE
 	if (x->list==FALSE){printf("Date: ");}
-	printf(" %2d/%2d/%2d", x->cursor->data[DD], x->cursor->data[MM], x->cursor->data[YY]);
+	printf(" %2d/%2d/%2d ", x->cursor->data[DD], x->cursor->data[MM], x->cursor->data[YY]);
 	return;
 }
 
@@ -650,29 +667,29 @@ void PrintClass( X *x ){ //DONE
 	case 1: //High
 		printf("H");
 		if (x->list==FALSE){break;}
-		printf("igh");
+		printf("igh      ");
 		break;
 	
 	case 2: //Medium
 		printf("M");
 		if (x->list==FALSE){break;}
-		printf("edium");
+		printf("edium    ");
 		break;
 	
 	case 3: //Low
 		printf("L");
 		if (x->list==FALSE){break;}
-		printf("ow");
+		printf("ow       ");
 		break;
 	
 	case 4: //Completed
 		printf("C");
 		if (x->list==FALSE){break;}
-		printf("ompleted");
+		printf("ompleted ");
 		break;
 	
 	default:
-		printf("Invalid Class");
+		printf("Invalid  ");
 	}
 	if (x->list==FALSE){printf("\n");}
 	return;

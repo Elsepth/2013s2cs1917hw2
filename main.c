@@ -1,3 +1,6 @@
+//Readability: Use an editor such as Notepad++ that allows collapsing. The entire page takes one screen collapsed.
+
+#include "hw2.h"
 
 void FreeList( Item *list ){ //DONE
   Item *item;
@@ -16,11 +19,9 @@ void FreeItem ( Item *item ){ //DONE
    free( item->notes );
    free( item );
 }
+//void Itemhotep( void );//summons an egyptian goddess
 
-
-void Itemhotep( void );//summons an egyptian goddess
-
-void InitialiseX(X *x){ //DONE
+void InitialiseX( X *x ){ //DONE
 	x->first = NULL; x->last = NULL; x->cursor = NULL; x->prev = NULL; //set pointers
 	x->backup = (Item *)malloc( sizeof( Item ));
 	if( x->backup == NULL ) {
@@ -30,6 +31,34 @@ void InitialiseX(X *x){ //DONE
 	x->hist = NULL; x->list = TRUE; /*x->print = TRUE;*/ x->edit = NULL; //set flags
 return;}
 
+void InsertItem( X *x, Item *item ){ //DONE
+	//inserts an item into list, and puts the & into x
+	//parses data as a long, and compares it with a simple greater than operation to see whether to move on or place it here.
+	x->prev = x->cursor;
+	long *idA = item;
+	long *idX;
+	x->hist = 'A';
+	for(x->cursor = x->first; x->cursor != NULL; x->cursor = x->cursor->next ){
+		idX = x->cursor;
+		if(idA < idX){
+			//if (x->cursor == x->first){}//insert it at the beginning
+			//else{} //insert it
+			item->next = x->cursor;
+			item->prev = x->cursor->prev;
+			x->cursor->prev = item;
+			if(item->prev != NULL){item->prev->next = item;}
+			else{x->first = item;}
+			x->cursor = item;
+			return;
+		}
+	}
+	//insert it at the end
+	x->last->next = item;
+	item->prev = x->last;
+	x->last = item;
+	x->cursor = item;
+	return;
+}
 Item *MakeItem( void );{ //DONE
 		Item *newItem = (Item *)malloc( sizeof( Item ));
 	if( newItem == NULL ) {
@@ -125,17 +154,13 @@ void GetDate( Item *item ){ //DONE???
 	//if(sscanf(s,"%d/%d/%d", &item->data[2], &item->data[1], &item->data[0] )==3);
 
 }//???
-
-int ScanDate( char *data[4] )
-//	scan date in the format dd/mm/yy
-{
+int ScanDate( short *data[4] ){ //	scan date in the format dd/mm/yy
 	char s[MAX_LINE];
 
 	fgets( s, MAX_LINE, stdin );
 	return(
-		 sscanf(s,"%d/%d/%d", &item->data[DD], &item->data[MM], &item->data[YY] )==3);
+		 sscanf(s,"%d/%d/%d", &data[DD], &data[MM], &data[YY] )==3);
 }
-
 int IsDateValid( short data[4] ){ //DONE?
 	if(data[YY] > 99 || data[YY] < 0){return 0;}//rejects weird years
 	if(data[MM] > 12 || data[MM] < 1){return 0;}//rejects weird months
@@ -185,64 +210,42 @@ void GetClass( short data[4] ){ //DONE
 	}
 	return;
 }
-void InsertItem(X *x, Item *item){ //DONE
-	x->prev = x->cursor;
-	long *idA = item;
-	long *idX;
-	x->hist = 'A';
-	for(x->cursor = x->first; x->cursor != NULL; x->cursor = x->cursor->next ){
-		idX = x->cursor;
-		if(idA < idX){
-			//if (x->cursor == x->first){}//insert it at the beginning
-			//else{} //insert it
-			item->next = x->cursor;
-			item->prev = x->cursor->prev;
-			x->cursor->prev = item;
-			if(item->prev != NULL){item->prev->next = item;}
-			else{x->first = item;}
-			x->cursor = item;
-			return;
-		}
-	}
-	//insert it at the end
-	x->last->next = item;
-	item->prev = x->last;
-	x->last = item;
-	x->cursor = item;
-	return;
-}//inserts an item into list, and puts the & into x
-//parses data as a long, and compares it with a simple greater than operation to see whether to move on or place it here.
-void MoveForward(X *x){ //DONE
+
+void MoveForward( X *x ){ //DONE
 	if(x->last != x->cursor){
 		x->prev = x->cursor;
 		x->cursor = x->cursor->next;
 		x->hist = 'F';
 	}
 }
-void MoveBackward(X *x){ //DONE
+void MoveBackward( X *x ){ //DONE
 	if(x->first != x->cursor){
 		x->prev = x->cursor;
 		x->cursor = x->cursor->prev;
 		x->hist = 'B';
 	}
 }
-void ItemMode(X *x){ //DONE
+
+void ItemMode( X *x ){ //DONE
 	x->list = 0;
 	x->hist = 'P';
 	return;
 }
-void ListMode(X *x){ //DONE
+void ListMode( X *x ){ //DONE
 	x->list = 1;
 	x->hist = 'L';
 	return;
 }
-void RemoveItem(X *x){ //DONE
+
+void RemoveItem( X *x ){ //DONE
 	if(x->backup != NULL;){
-	FreeItem( x->backup );}//the current item doesn't need to be freed since
+		FreeItem( x->backup );
+	}//the current item doesn't need to be freed since
 	x->backup = x->cursor; //it's renameed backup and freed next action
 	
 	if( x->cursor == NULL ){ //error list is empty
-		//do lol
+		printf("ERROR: Cannot Remove Item - List is Empty./n");
+		return;
 	}else if( x->first == x->last ){ //The list has one entry
 		x->first = NULL; x->last = NULL; x->cursor = NULL;
 	}else if( x->last == x->cursor ){ //At the end of a list
@@ -261,37 +264,56 @@ void RemoveItem(X *x){ //DONE
 	x->hist = 'R';
 	return;
 }
-void EditItem(X *x, char edit){ //DONE
+
+void EditItem( X *x, char edit ){ //DONE
 	if(x->backup != NULL;){
-	FreeItem( x->backup );}
+		FreeItem( x->backup );
+	}
 	x->backup = x->cursor;
 	
 	switch(edit){
-		case 'T': get new task, overwrite
+		case 'T': //get new task, overwrite
 			x->cursor->task = GetTask();
 			break;
 		
-		case 'D': get new date, ovewrite
+		case 'D': //get new date, ovewrite
 			GetDate( &x->cursor );
 			break;
 		
-		case 'C': get new class, overwrite
+		case 'C': //get new class, overwrite
 			GetClass( &x->cursor );
 			break;
 		
-		case 'N': get new note, overwrite
+		case 'N': //get new note, overwrite
 			x->cursor->notes = GetNotes();
 			break;
 	}
 	x->hist = edit;
-	//x->print = TRUE;
 }
+/*
+void Search( X *x ){//TODO
+	fgets a sting om max line from stdin
+	sscanf the char array into a string
+	make it allcaps
+	Item *scan; for( scan = x->first; scan != NULL; scan = scan->next){
+		copy the string into a buffer and make it allcaps
+		for( somehow go through the two strings and compare them
+			for (character = first character in scanned string ; character != NULL ; character = next character )
+				//???
+	}
 
+//LOGIC
+for each scanned String
+	for each character in the scanned string
+		while it matches, go through the query characters
+			if they don't match, break;
+			else you've found a match, copy the Item, highlight the query, print, and continue with loop.
+	
+	x->hist = 'S';
+	return;
+}*/
 
-void Search(X *x){//TODO
-
-}
-void Undo(X *x){ //DONE
+void Undo( X *x ){ //DONE
 	switch( x->hist ){
 		case 'A':
 			RemoveItem(x);
@@ -330,17 +352,19 @@ void Undo(X *x){ //DONE
 			break;
 		
 		default:
-			//do nothing
+			if( x->hist == NULL ){printf("ERROR: Cannot undo. No History.");
+			}else{printf("ERROR: Cannot undo. Action not supported.");}
 			break;
 	}
-	historyFlag = NULL;
+	historyFlag = 'U';
 }
 
+void Quit( X *x ){ //TODO
+//Do we need a function for this, or should we just dump all the end-of-runtime cleaning into int main? everything is in a pointer anyway.
+return;
 }
-void Quit(X *x){ //TODO
 
-}
-void Help(X *x){ //DONE
+void Help( X *x ){ //DONE
   printf("\n");
   printf(" A - Add item\n" );
   printf(" F - move Forward\n" );
@@ -358,18 +382,13 @@ void Help(X *x){ //DONE
   printf(" H - Help\n");
   printf("\n");
   
-  //x->hist = 'H';
+  x->hist = 'H';
 }
 
 
 
 
-
-
-
-
-//Print List function
-void PrintList(X *x){ //DONE
+void PrintList( X *x ){ //DONE
 	Item *swap = x->cursor;
 	for (x->cursor = x->first; x->cursor != NULL; x->cursor = x->cursor->next){
 		if(x->cursor==swap){printf("->");}
@@ -382,21 +401,20 @@ void PrintList(X *x){ //DONE
 	x->cursor = swap;
 }
 
-//Print Item function
-void PrintItem(X *x){ //DONE
+void PrintItem( X *x ){ //DONE
 	printf("Task:	%s\n",x->current->task);
 	PrintDate(x);
 	PrintClass(x);
 	printf("Notes: %s\n",x->current->notes);
 }
 
-void PrintDate(X *x){ //DONE
+void PrintDate( X *x ){ //DONE
 	if (x->list==FALSE){printf("Date: ");}
 	printf(" %2d/%2d/%2d", x->cursor->data[DD], x->cursor->data[MM], x->cursor->data[YY]);
 	return;
 }
 
-void PrintClass(X *x){ //DONE
+void PrintClass( X *x ){ //DONE
 	if (x->list==FALSE){printf("\nClass: ");}
 	
 	switch( x->cursor->data[CLASS] ){

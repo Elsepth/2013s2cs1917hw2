@@ -39,38 +39,37 @@ struct x {
 //Linked List Operations
 void FreeList( Item *list );
 void FreeItem( Item *item );
+//void Itemhotep( void );//summons an egyptian goddess
 
-void Itemhotep( void );//summons an egyptian goddess
+void InitialiseX( X* x );
 
-void InitialiseX( X x );
-
-
+void InsertItem(X *x, Item *item);
 Item *MakeItem( void );//makes a new item, and gets the things for it, and returns the &
-	char GetTask( Item *item );
-	char GetNotes(Item *item);
-	void GetDate( Item *item );
-		IsDateValid( short data[4]);
-	void GetClass(Item *item);
-void InsertItem(X *x, Item *item);//inserts an item into list, and puts the & into x
-//parses data as a long, and compares it with a simple greater than operation to see whether to move on or place it here.
-void MoveForward(X *x);
-void MoveBackward(X *x);
-void ItemMode(X *x);
-void ListMode(X *x);
-void RemoveItem(X *x);
-void EditItem(X *x, int restore);
-void Search(X *x);
-void Undo(X *x);
-void Quit(X *x);
-void Help(X *x);
+char *GetTask( void );
+char *GetNotes( void );
+void GetDate( Item *item );
+int  ScanDate( short data[4] );
+int  IsDateValid( short data[4] );
+void GetClass( short data[4] );
+
+void MoveForward( X *x );
+void MoveBackward( X *x );
+
+void ItemMode( X *x );
+void ListMode( X *x );
+
+void RemoveItem( X *x );
+void EditItem( X *x, char edit );
+//void Search( X *x );
+void Undo( X *x );
 
 
-
-//in main
-void	PrintList(Item *list, Item *cursor);
-void	PrintItem(Item *c);
-void	PrintDate(Date d, int x);
-void	PrintClass(int class, int x);
+//void Quit( X *x );
+void Help( X *x );
+void PrintList( X *x );
+void PrintItem( X *x );
+void PrintDate( X *x );
+void PrintClass( X *x );
 
 
 

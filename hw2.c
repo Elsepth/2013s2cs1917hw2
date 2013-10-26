@@ -34,7 +34,7 @@ int main( void )
 		switch( op ) {
 
 		case 'A': // Add new task
-			InsertItem(&x, MakeItem);
+			InsertItem(&x, MakeItem(););
 			break;
 
 		case 'F': // Move Forward
@@ -69,7 +69,7 @@ int main( void )
 			break;
 			
 		case 'S': // Searches for a text string
-			Search(&x);
+			//Search(&x); broken
 			break;
 
 		case 'U': // Undoes last action
@@ -92,12 +92,14 @@ int main( void )
 
 		}
 		//if(x.print==TRUE){
-		//if(op==AFBPLRTDCNU){//TODO: Make this work.
-			if(x.list==TRUE){
-				PrintList(&x);
-			}else{
-				PrintItem(&x);
-			}
+		//if(op==AFBPLRTDCNU){//DONE: Make this work.
+		switch(x.hist){ //necessitates that all functions set x->hist
+			case:'A' case:'F' case:'B' case:'P' case:'L' case:'R' case:'T' case:'D' case:'C' case:'N' case:'U'
+				if(x.list==TRUE){
+					PrintList(&x);
+				}else{
+					PrintItem(&x);
+				}break;
 			//x.print = FALSE;
 		}
 	}

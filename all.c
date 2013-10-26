@@ -17,7 +17,7 @@ typedef struct x X;
 typedef struct item Item;
 typedef char Flag;
 struct item {
-	short data[4]; //in order; Year, Month, Day, and Class. Together they form a long for easy sorting.
+	char data[4]; //in order; Year, Month, Day, and Class. Together they form a int for easy sorting.
 	Item *prev;
 	Item *next;
 	char *task;
@@ -49,7 +49,7 @@ char *GetTask( void );
 char *GetNotes( void );
 void GetDate( Item *item );
 int  ScanDate( Item* item );
-int  IsDateValid( short data[4] );
+int  IsDateValid( char data[4] );
 void GetClass(  Item *item );
 
 void MoveForward( X *x );
@@ -200,10 +200,10 @@ return;}
 
 void InsertItem( X *x, Item *item ){ //DONE
 	//inserts an item into list, and puts the & into x
-	//parses data as a long, and compares it with a simple greater than operation to see whether to move on or place it here.
+	//parses data as a int, and compares it with a simple greater than operation to see whether to move on or place it here.
 	x->prev = x->cursor;
-	long *idA = item->data;
-	long *idX;
+	int *idA = item->data;
+	int *idX;
 	x->hist = 'A';
 	for(x->cursor = x->first; x->cursor != NULL; x->cursor = x->cursor->next ){
 		idX = x->cursor->data;
@@ -327,11 +327,12 @@ void GetDate( Item *item ){ //DONE???
 	//if(sscanf(s,"%d/%d/%d", &item->data[2], &item->data[1], &item->data[0] )==3);
 
 }//???
+/*
 int ScanDate( Item* item ){ //	scan date in the format dd/mm/yy ddddd
 	char s[MAX_LINE];
 
 	fgets( s, MAX_LINE, stdin );
-	//short day, month, year;
+	//char day, month, year;
 	return (sscanf(s, "%d/%d/%d", item->data[DD], item->data[MM], item->data[YY])==3);
 	//int nums = (sscanf(s, "%d/%d/%d", &day, &month, &year)==3);
 	//item->data[0] = day;
@@ -341,7 +342,51 @@ int ScanDate( Item* item ){ //	scan date in the format dd/mm/yy ddddd
 	
 	//return(sscanf(s,"%d/%d/%d", &data[DD], &data[MM], &data[YY] )==3);
 }
-int IsDateValid( short data[4] ){ //DONE?
+
+int ScanDate (Item* item){
+	char s[9];
+
+	fgets( s, 9, stdin );
+	char day, month, year;
+	//return(sscanf(s,"%d/%d/%d", item->data[DD], item->data[MM], item->data[YY])==3);
+	
+	int nums = (sscanf(s, "%d.%d.%d", &day, &month, &year)==3);
+	item->data[0] = day;
+	item->data[1] = month;
+	item->data[2] = year;
+	if (nums == 3){return 1;}else{return 0;}
+	
+	//return(sscanf(s,"%d/%d/%d", &data[DD], &data[MM], &data[YY] )==3);
+	
+	
+}*/
+int ScanDate (Item* item) {
+	int i; int k;
+	char s[9];
+	for(i=0;i<9;i++){
+		s[i]=getchar();
+		putchar(s[i]);
+		switch(i){
+			case 0: case 1: case 3: case 4: case 6: case 7:
+				if( !isdigit(s[i]) ){return 0;}
+				else s[i] = s[i] - '0';
+				break;
+			case 2: case 5:
+				if(s[i] != '/'){return 0;}
+				break;
+			case 8:
+				if (s[i]!=EOF){return 0;}
+				break;
+		}
+	}
+	item->data[DD] = (10*s[0]) + s[1];
+	item->data[MM] = (10*s[3]) + s[4];
+	item->data[YY] = (10*s[6]) + s[7];
+	return 1;
+}
+
+
+int IsDateValid( char data[4] ){ //DONE?
 	if(data[YY] > 99 || data[YY] < 0){return 0;}//rejects weird years
 	if(data[MM] > 12 || data[MM] < 1){return 0;}//rejects weird months
 	if(data[DD] < 1){return 0;}//rejects negative days
@@ -360,7 +405,7 @@ void GetClass( Item *item ){ //DONE
 
 	char s[MAX_LINE];
 	//item->data[3] = 0;
-	short class = 0;
+	char class = 0;
 	int i;
 
 	printf("Class: ");					 // prompt user
@@ -427,7 +472,7 @@ void RemoveItem( X *x ){ //DONE
 	x->backup = x->cursor; //it's renameed backup and freed next action
 	
 	if( x->cursor == NULL ){ //error list is empty
-		printf("ERROR: Cannot Remove Item - List is Empty./n");
+		printf("ERROR: Cannot Remove Item - List is Empty.\n");
 		return;
 	}else if( x->first == x->last ){ //The list has one entry
 		x->first = NULL; x->last = NULL; x->cursor = NULL;
@@ -447,7 +492,7 @@ void RemoveItem( X *x ){ //DONE
 	x->hist = 'R';
 	return;
 }
-
+//needs to check that there is actually something there to edit, before it tries to do so
 void EditItem( X *x, char edit ){ //DONE
 	if(x->backup != NULL){
 		FreeItem( x->backup );
@@ -535,8 +580,8 @@ void Undo( X *x ){ //DONE
 			break;
 		
 		default:
-			if( x->hist == '0' ){printf("ERROR: Cannot undo. No History.");
-			}else{printf("ERROR: Cannot undo. Action not supported.");}
+			if( x->hist == '0' ){printf("ERROR: Cannot undo. No History.\n");
+			}else{printf("ERROR: Cannot undo. Action not supported.\n");}
 			break;
 	}
 	x->hist = 'U';
@@ -632,4 +677,75 @@ void PrintClass( X *x ){ //DONE
 	if (x->list==FALSE){printf("\n");}
 	return;
 }
+
+// DEBUG
+
+//A - task accepts. Date either fails to validate or segfaults.
+/*
+Enter command (A,F,B,P,L,R,T,D,C,N,S,U,Q, H for Help): A
+
+Task:   Test
+Date:   11/11/11
+
+Program received signal SIGSEGV, Segmentation fault.
+0x555db9e1 in _IO_vfscanf_internal (
+    s=<error reading variable: Cannot access memory at address 0x0>,
+    format=<error reading variable: Cannot access memory at address 0x4>,
+    argptr=<error reading variable: Cannot access memory at address 0x8>,
+    errp=<error reading variable: Cannot access memory at address 0xc>)
+    at vfscanf.c:1857
+1857    vfscanf.c: No such file or directory.
+*/
+
+/* F and B seem to be all right, understandably, they only have two lines of code after all
+Enter command (A,F,B,P,L,R,T,D,C,N,S,U,Q, H for Help): F
+Enter command (A,F,B,P,L,R,T,D,C,N,S,U,Q, H for Help): B
+*/
+
+/* P segfaults
+Enter command (A,F,B,P,L,R,T,D,C,N,S,U,Q, H for Help): P
+
+Program received signal SIGSEGV, Segmentation fault.
+0x08049482 in PrintItem ()
+*/
+/* L works, seemingly. also I forgot the code to make all commands uppercase.
+Enter command (A,F,B,P,L,R,T,D,C,N,S,U,Q, H for Help): L
+*/
+// R fails properly without anything to remove
+/* ScanDate debugging
+Date:   11.12.13
+352             int nums = (sscanf(s, "%d.%d.%d", &day, &month, &year)==3);
+	(gdb) info locals
+s = "11.12.13\n\000¦¦¦nU\000..."
+day = 0 '\000'
+month = 0 '\000'
+year = 0 '\000'
+nums = 134518749
+	(gdb) next
+353             item->data[0] = day;
+	(gdb) info locals
+s = "\000\000\000\061\062.13\n\000¦¦¦nU\000..."
+day = 11 '\v'
+month = 0 '\000'
+year = 0 '\000'
+nums = 0
+*/
+/*
+
+*/
+/**/
+/**/
+/* Quit works fine. No function was necessary? maybe add cleanup later.
+Enter command (A,F,B,P,L,R,T,D,C,N,S,U,Q, H for Help): Q
+Bye!
+[Inferior 1 (process 6061) exited normally]
+*/
+//Help works fine.
+/**/
+/**/
+/**/
+/**/
+/**/
+/**/
+/**/
 

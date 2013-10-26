@@ -71,6 +71,7 @@ void PrintItem( X *x );
 void PrintDate( X *x );
 void PrintClass( X *x );
 
+char GetClass( void );
 
 int main( void )
 {
@@ -123,7 +124,8 @@ int main( void )
 			EditItem(&x, 'D');
 			break;
 		case 'C': // Edit Task Class
-			EditItem(&x, 'C');
+			//EditItem(&x, 'C');
+			x->cursor->data[4] = GetClass();
 			break;
 		case 'N': // Edit Task Notes
 			EditItem(&x, 'N');
@@ -694,6 +696,43 @@ void PrintClass( X *x ){ //DONE
 	if (x->list==FALSE){printf("\n");}
 	return;
 }
+
+
+/*
+char GetClass ( void ){
+	
+	char s[MAX_LINE];
+	//item->data[3] = 0;
+	char class = 0;
+	int i;
+
+	//	printf("Class: ");					 // prompt user
+	fgets( s, MAX_LINE, stdin );
+	while( class == 0 ) {
+		 for( i=0;( i<MAX_LINE )&&( isspace(s[i])); i++ );
+		 switch( s[i] ) {
+			 case 'h': case 'H':	// High
+					class = 1;
+					break;
+			 case 'm': case 'M':	// Medium
+					class = 2;
+					break;
+			 case 'l': case 'L':	// Low
+					class = 3;
+					break;
+			 case 'c': case 'C':	// Completed
+					class = 4;
+					break;
+		 }
+		 if( class == 0 ) {
+			 printf("Enter H,M,L or C: ");
+			 fgets( s, MAX_LINE, stdin );
+		 }
+	}
+	
+	return class;
+}
+
 
 // DEBUG
 

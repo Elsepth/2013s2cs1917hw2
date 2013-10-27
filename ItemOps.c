@@ -7,12 +7,49 @@
 
 #include "hw2.h"
 
+//Local Function Prototypes
+//unsigned char date_ok(unsigned char day, unsigned char month, unsigned char year);
+
 //Reads a string from input and sets as the current item's Task Name
 void EditTask(List* List, unsigned char isNew){
   
   if(List->m_cursor != NULL){
+   
+    //The following section is based on sample code provided in hw2.c
     
-    printf("EditTask: feature not implemented, assigning address as taskname'\n");
+    char buffer[MAX_TEXT];
+    char *task;
+    int length;
+    int ch;
+    int i;
+
+    // prompt user for input
+    printf( "Task:  " );
+    // skip any intial newline character
+    if(( ch = getchar()) == '\n' ) {
+      ch = getchar();
+    }
+    // read text initially into a buffer
+    i=0;
+    while((i < MAX_TEXT)&&(ch != '\n')&&(ch != EOF)) {
+      buffer[i++] = ch;
+      ch = getchar();
+    }
+    // allocate just enough space to store the string
+    length = i;
+    task = (char *)malloc((length+1)*sizeof(char));
+    if( task == NULL ) {
+      printf("Error allocating memory.\n");
+      exit( 1 );
+    }
+    // copy text from buffer into new string
+    for( i=0; i<length; i++ ) {
+      task[i] = buffer[i];
+    }
+    task[i] = '\0'; // add end-of-string marker
+    
+    
+    (List->m_cursor)->task=task;
     
     //TODO: Commit changes to history
     
@@ -25,12 +62,16 @@ void EditTask(List* List, unsigned char isNew){
   
 }
 
+//Note to marker: all three date functions from hw2.c (get_date, scan_date and date_ok) have been combined into one function
+//This is to ensure consistency in operation with all other ItemOps functions
+
 //Reads a date in the format DD/MM/YY and sets as theh current item's Date
 void EditDate(List* List, unsigned char isNew){
   
   if(List->m_cursor != NULL){
     
-    printf("EditDate: assigning default date of 10/11/12\n");
+    printf("Setting default date.\n");
+    
     (List->m_cursor)->date.day=10;
     (List->m_cursor)->date.month=11;
     (List->m_cursor)->date.year=12;
@@ -54,8 +95,45 @@ void EditPriority(List* List, unsigned char isNew){
   
   if(List->m_cursor != NULL){
     
-    printf("EditPriority(Class) not implemented, assigning default value of 'H'\n");
-    (List->m_cursor)->tClass='H';
+    //The following section is based on sample code provided in hw2.c
+    
+    char s[MAX_LINE];
+      int tClass = 0;
+      int i;
+
+      printf("Class: ");           // prompt user
+      fgets( s, MAX_LINE, stdin ); // scan a line of input
+
+      // keep scanning until class is successfully entered
+      while( tClass == 0 ) {
+    
+	// scan input for first non-space character
+	for( i=0;( i<MAX_LINE )&&( isspace(s[i])); i++ )
+	    ;
+
+	switch( s[i] ) {
+	  case 'h': case 'H':  // High
+	      (List->m_cursor)->tClass='H';
+	      tClass=1;
+	      break;
+	  case 'm': case 'M':  // Medium
+	      (List->m_cursor)->tClass='M';
+	      tClass=1;
+	      break;
+	  case 'l': case 'L':  // Low
+	      (List->m_cursor)->tClass='L';
+	      tClass=1;
+	      break;
+	  case 'c': case 'C':  // Completed
+	      (List->m_cursor)->tClass='C';
+	      tClass=1;
+	      break;
+	}
+	if( tClass == 0 ) {
+	  printf("Enter H,M,L or C: ");
+	  fgets( s, MAX_LINE, stdin );
+	}
+      }
     
     //Calls sorter to relocate node if necessary based on input
     SortItems(List);
@@ -75,8 +153,42 @@ void EditPriority(List* List, unsigned char isNew){
 void EditNotes(List* List, unsigned char isNew){
   
   if(List->m_cursor != NULL){
+    
+    //The following section is based on sample code provided in hw2.c
 
-    printf("EditNotes: You can't add notes yet!\n");
+    char buffer[MAX_TEXT];
+    char *notes;
+    int length;
+    int ch;
+    int i;
+
+    printf("Notes: ");
+    ch = getchar();
+    i=0;
+    while(( i < MAX_TEXT )&&( ch != EOF )) {
+      buffer[i++] = ch;
+      ch = getchar();
+      // stop when you encounter a dot on a line by itself
+      if(( i > 1 )&&( ch == '\n' )&&( buffer[i-1] == '.' )
+				  &&( buffer[i-2] == '\n')) {
+	  ch = EOF;
+	  i  = i-2; // strip off the dot and newlines
+      }
+    }
+    length = i;
+    // allocate just enough space to store the string
+    notes = (char *)malloc((length+1)*sizeof(char));
+    if( notes == NULL ) {
+      printf("Error allocating memory.\n");
+      exit( 1 );
+    }
+    // copy text from buffer to new string
+    for( i=0; i<length; i++ ) {
+      notes[i] = buffer[i];
+    }
+    notes[i] = '\0'; // add end-of-string marker
+    
+    (List->m_cursor)->notes=notes;
 
     //TODO: Commit changes to history
     
@@ -100,3 +212,9 @@ void Undo(List *List){
   printf("Undo hasn't been implemented just yet. So you're fucked! :D");
   DrawOutput(List);
 }
+
+//unsigned char date_ok(unsigned char day, unsigned char month, unsigned char year){
+  
+  //Verification for year value
+  
+//}

@@ -42,7 +42,7 @@ struct date{
 //  char actionType;
 //  unsigned char undoable;
 //  char printMode;
-};
+//};
 
 //Structtype 'item' is a node item
 struct item{

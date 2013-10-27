@@ -74,6 +74,9 @@ int isClassValid (char c, Item* i);
 void FreeList( Item *list );
 void FreeItem( Item *item );
 
+
+char *get_notes( void );
+
 //void Search ( List* l );
 
 int main( void ) {
@@ -150,11 +153,11 @@ int main( void ) {
 					
 					
 					//==========
-					printf("Notes:  ");
-					ReadData( lineBuffer ); 
-					
-					ptr->notes = (char*)malloc(strlen(lineBuffer));
-					strcpy(ptr->notes,lineBuffer);
+					//printf("Notes:  ");
+					//ReadData( lineBuffer ); 
+					ptr->notes = get_notes();
+				//	ptr->notes = (char*)malloc(strlen(lineBuffer));
+					//strcpy(ptr->notes,lineBuffer);
 					//==========
 					
 					
@@ -405,7 +408,6 @@ int main( void ) {
 				if (lonely != NULL){FreeItem(lonely);}
 				//FreeList (list.head);
 				//free(lineBuffer);
-				printf("Bye!\n");
 				return 0;
 				break;
 		}
@@ -415,27 +417,23 @@ return 0;
 }
 
 void PrintList ( Item* target, List* list, char mode ){
+	if(target==NULL)return;
 	Item* ptr = NULL;
 	if (mode == 'L')
 	{
 		//char* shortClass = (char *)malloc(MAX_LINE);//because malloc(1); is silly and hilarious
 		char* shortClass;
-		printf("\n");
-		printf("\n");		
 		for (ptr = list->head ; ptr != NULL ; ptr = ptr->next ){
 		//shortClass = "";
 		//strncpy(shortClass, ptr->class, 1);
 		shortClass = ptr->class;
 		if(ptr == target){printf("->");}else{printf("  ");}
 		printf("%s %c %d %s \n",ptr->date, *shortClass, ptr->id, ptr->task);
-		printf("\n");
 		}
 		//free(shortClass);
 	}
 	
 	else if (mode == 'I'){
-		printf("\n");
-		printf("\n");
 		printf("ID:    ");
 			printf("%d",target->id);
 			printf("\n");
@@ -451,7 +449,6 @@ void PrintList ( Item* target, List* list, char mode ){
 		printf("Notes: ");
 			printf("%s",target->notes);
 			printf("\n");
-		printf("\n");
 	}
 }
 	
@@ -639,6 +636,42 @@ int isClassValid (char c, Item* i){
 return 1;
 }
 
+char *get_notes( void )
+{
+  char buffer[MAX_TEXT];
+  char *notes;
+  int length;
+  int ch;
+  int i;
+
+  printf("Notes: ");
+  ch = getchar();
+  i=0;
+  while(( i < MAX_TEXT )&&( ch != EOF )) {
+     buffer[i++] = ch;
+     ch = getchar();
+     // stop when you encounter a dot on a line by itself
+     if(( i > 1 )&&( ch == '\n' )&&( buffer[i-1] == '.' )
+                                 &&( buffer[i-2] == '\n')) {
+        ch = EOF;
+        i  = i-2; // strip off the dot and newlines
+     }
+  }
+  length = i;
+  // allocate just enough space to store the string
+  notes = (char *)malloc((length+1)*sizeof(char));
+  if( notes == NULL ) {
+     printf("Error: could not allocate memory.\n");
+     exit( 1 );
+  }
+  // copy text from buffer to new string
+  for( i=0; i<length; i++ ) {
+     notes[i] = buffer[i];
+  }
+  notes[i] = '\0'; // add end-of-string marker
+
+  return( notes );
+}
 
 /*
 int isClassValid ( char* l, Item* i ){

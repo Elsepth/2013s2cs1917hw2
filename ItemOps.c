@@ -19,7 +19,11 @@ void EditTask(List* List, unsigned char isNew){
     int length;
     int ch;
     int i;
-
+	
+	//History TODO
+	//Copy m_cursor to m_backup
+	List->undoMode = 'T';
+	
     // prompt user for input
     printf( "Task:  " );
     // skip any intial newline character
@@ -47,9 +51,7 @@ void EditTask(List* List, unsigned char isNew){
     
     
     (List->m_cursor)->task=task;
-    
-    //TODO: Commit changes to history
-    
+        
     //Redraws output only if modifying an existing item
     if (isNew==0){
       DrawOutput(List);
@@ -68,6 +70,10 @@ void EditDate(List* List, unsigned char isNew){
   
   if(List->m_cursor != NULL){
     
+	//History TODO
+	//Copy m_cursor to m_backup
+	List->undoMode = 'D';
+	
     Date s;
     unsigned char dateValid;
     
@@ -102,15 +108,15 @@ void EditDate(List* List, unsigned char isNew){
     (List->m_cursor)->date.year=s.year;
     
     
-    //Calls sorter to relocate node if necessary based on input
-    SortItems(List);
     
-    //TODO: Commit changes to history
   
     //Redraws output only if modifying an existing item
     if (isNew==0){
       DrawOutput(List);
-    }
+    }else{
+      //Calls sorter to relocate node if necessary based on input
+      SortItems(List);
+	}
     
   }
   
@@ -121,6 +127,10 @@ void EditPriority(List* List, unsigned char isNew){
   
   if(List->m_cursor != NULL){
     
+	//History TODO
+	//Copy m_cursor to m_backup
+	List->undoMode = 'C';
+	
     //The following section is based on sample code provided in hw2.c
     
     char s[MAX_LINE];
@@ -161,15 +171,13 @@ void EditPriority(List* List, unsigned char isNew){
 	}
       }
     
-    //Calls sorter to relocate node if necessary based on input
-    SortItems(List);
-    
-    //TODO: Commit changes to history
-    
     //Redraws output only if modifying an existing item
     if (isNew==0){
       DrawOutput(List);
-    }
+    }else{//only if called independently
+	  //Calls sorter to relocate node if necessary based on input
+      SortItem(List);
+	}
     
   }
   
@@ -180,6 +188,10 @@ void EditNotes(List* List, unsigned char isNew){
   
   if(List->m_cursor != NULL){
     
+	//History TODO
+	//Copy m_cursor to m_backup
+	List->undoMode = 'N';
+	
     //The following section is based on sample code provided in hw2.c
 
     char buffer[MAX_TEXT];
@@ -216,8 +228,6 @@ void EditNotes(List* List, unsigned char isNew){
     
     (List->m_cursor)->notes=notes;
 
-    //TODO: Commit changes to history
-    
     //Redraws output only if modifying an existing item
     if (isNew==0){
       DrawOutput(List);
@@ -242,7 +252,33 @@ void SearchItems(List *List){
 
 //Undoes the last action
 void Undo(List *List){
-  printf("Undo hasn't been implemented just yet. So you're fucked! :D");
+  printf("Undo hasn't been fully implemented just yet. So you're fucked! :D");
+  switch(List->undoMode){
+    case 'A':
+		//remove item, but without keeping history
+		UnlinkItem(List);
+		break;
+	case 'F':
+		MoveBack(List);
+		break;
+	case 'B':
+		MoveForward(List);	
+		break;
+	case 'R':
+		List->undoMode = 'S';//undoMode = reStore
+		Link (m_backup)
+		break;
+	case 'T': case 'D': case 'C': case 'N':
+		UnlinkItem(List);
+		//restore m_cursor from m_backup
+		LinkItem(List);
+		break;
+    default:
+    
+  }
+  List->undoMode = 'U';
+  
+  
   DrawOutput(List);
 }
 

@@ -63,7 +63,7 @@ struct list{
   Item *m_cursor;	//Current selected item
   Item *m_prev;		//Previous selected item
   char undoMode; //last thing that was done to something [A FB R TDCN Other]
-  Item *m_backup;
+  Item *m_backup; //also stores new item before linking.
 };
 
 
@@ -74,6 +74,8 @@ void NewItem(List *List);
 void RemoveItem(List *List);
 
 void SortItems(List *List);
+void LinkItem(List *List);
+void UnlinkItem(List *List);
 
 void MoveForward(List *List);
 void MoveBack (List *List);

@@ -53,7 +53,7 @@ void DrawOutput(List *List){
       printf("%d/%d/%d",target->date.day,target->date.month,target->date.year);
       printf("\n");
       printf("Class: ");
-      printf("%c",target->tClass);
+      printf("%c",target->tClass); //doesn't the class need to be printed as a word?
       printf("\n");
       printf("Notes: ");
       printf("%s",target->notes);

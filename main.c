@@ -35,12 +35,14 @@ int main(void){
       
       case 'A':
 	isNew=1;
-	NewItem(currentList);
+	NewItem(currentList);//the way I did it in Medusa (which I think is better) was to not sort this list until it was filled out.
 	EditTask(currentList,isNew);
 	EditDate(currentList,isNew);
 	EditPriority(currentList,isNew);
 	EditNotes(currentList,isNew);
+	//LinkItem(currentList);
 	DrawOutput(currentList);
+	isNew=0; //robustness ho!
 	break;
 	
       case 'F':
@@ -60,7 +62,7 @@ int main(void){
 	break;
 	
       case 'R':
-	RemoveItem(currentList);
+	RemoveItem(currentList); //contains UnlinkItem(currentList);
 	break;
 	
       case 'T':

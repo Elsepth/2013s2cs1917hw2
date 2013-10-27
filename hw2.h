@@ -28,7 +28,7 @@
 typedef struct item Item;
 typedef struct list List;
 typedef struct date Date;
-typedef struct history History;
+//typedef struct history History;
 
 //Structures
 

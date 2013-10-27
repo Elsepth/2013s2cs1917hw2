@@ -624,8 +624,32 @@ int isDateValid ( char* lineBuffer ){
         return 1;
 }
 
-int isClassValid ( char* lineBuffer ){
-        //LOGIC
-        return 1;
-}
 
+int isClassValid (char c, Item* i){
+	switch(c){
+	char*s;
+	case 'H':
+		i->c = 1;
+		s = "High";
+		i->class = s;
+		break;
+	case 'M':
+		i->c = 2;
+		s = "Medium";
+		i->class = s;
+		break;
+	case 'L':
+		i->c = 3;
+		s = "Low";
+		i->class = s;
+		break;
+	case 'C':
+		i->c = 4;
+		s = "Completed";
+		i->class = s;
+		break;
+	default:
+		return 0;
+	}
+return 1;
+}

@@ -24,6 +24,9 @@ Help -> Prints Stuff
 Quit -> Quits
 */
 
+//TDCN entries in struct item have NO FUNCTION but to be printed. All logic is done with id, which is an integer concatenated from the date, class, and a unique id.
+//The date is 2 bytes - 7 bits for the year, 4 bits for the month, and 5 bits for the day. The unique ID is 2 bytes. These can be written as two shorts, I guess.
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
@@ -66,7 +69,8 @@ int main( void ) {
 	Item* ptr = NULL;
 	Item* lonely = NULL; //after unlinked
 	int i;
-	char mode = 'L';
+	char mode = 'L'; //USE CAPS
+	char undo = 0; //USE CAPS
 	for (i=1; i != 0; i++){
 		printf("Enter command (A,F,B,P,L,R,T,D,C,N,S,U,Q, H for Help): ");
 		char ch = getchar(); while( !isalpha(ch) &&( ch != '\n' )) {ch = getchar();} char op = ch;
@@ -76,18 +80,23 @@ int main( void ) {
 				ptr = MakeItem(); ptr->id = i; target = Link(ptr,&list);
 				ptr = NULL;
 				PrintList (target, &list, mode);
+				undo = 'A';
 				break;
 			case 'f': case 'F':
+				undo = 0;
 				if (target == NULL){break;}//DO NOTHING
 				if (target->next == NULL){break;}//DO NOTHING
 				target = target->next;
 				PrintList (target, &list, mode);
+				undo = 'F';
 				break;
 			case 'b': case 'B':
+				undo = 0;
 				if (target == NULL){break;}//DO NOTHING
 				if (target->prev == NULL){break;}//DO NOTHING
 				target = target->prev;
 				PrintList (target, &list, mode);
+				undo = 'B';
 				break;
 			case 'p': case 'P':
 				PrintList (target, &list, mode);
@@ -112,24 +121,82 @@ int main( void ) {
 				
 				lonely = Unlink(ptr,&list);
 				ptr = NULL;
+				undo = 'R';
 				PrintList (target, &list, mode);
 				break;
 				
 			case 't': case 'T':
+				undo = 'T';
 				PrintList (target, &list, mode);
 				break;
 			case 'd': case 'D':
+				undo = 'D';
 				PrintList (target, &list, mode);
 				break;
 			case 'c': case 'C':
+				undo = 'C';
 				PrintList (target, &list, mode);
 				break;
 			case 'n': case 'N':
+				undo = 'N';
 				PrintList (target, &list, mode);
 				break;
 				
 			case 'u': case 'U':
-				PrintList (target, &list, mode);
+				printf("%c \n", undo);
+				switch (undo){//if undo fails, break
+					case 'A':
+						if (lonely != NULL){FreeItem(lonely); lonely == NULL;}
+						ptr = target;
+						if (target == list.head && target == list.tail){target = NULL;}
+						else if (target == list.tail){target = target->prev;}
+						else {target = target->next;}
+						
+						Unlink(ptr,&list);
+						ptr = NULL;
+
+						undo = 'U';
+						PrintList (target, &list, mode);
+						break;
+					case 'F':
+						if (target == NULL){break;}//DO NOTHING
+						if (target->prev == NULL){break;}//DO NOTHING
+						target = target->prev;
+						PrintList (target, &list, mode);
+						undo = 'U';
+						PrintList (target, &list, mode);
+						break;
+					case 'B':
+						if (target == NULL){break;}//DO NOTHING
+						if (target->next == NULL){break;}//DO NOTHING
+						target = target->next;
+						undo = 'U';
+						PrintList (target, &list, mode);
+						break;
+					case 'R':
+						undo = 'U';
+						PrintList (target, &list, mode);
+						break;
+					case 'T':
+						undo = 'U';
+						PrintList (target, &list, mode);
+						break;
+					case 'C':
+						undo = 'U';
+						PrintList (target, &list, mode);
+						break;
+					case 'D':
+						undo = 'U';
+						PrintList (target, &list, mode);
+						break;
+					case 'N':
+						undo = 'U';
+						PrintList (target, &list, mode);
+						break;
+					default:
+					undo = 'U';
+					break;
+				}
 				break;
 				
 			case 's': case 'S':

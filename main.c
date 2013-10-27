@@ -14,14 +14,14 @@ int main(void){
   
   //Declaration for local variables -- case [select] and loop watchdog [exit]
   char select; 
-  unsigned char isNew;
+  unsigned char isNew; //Flag used to desginate newly-created items
   unsigned char exit=0;
   
   //Declares and initialises list co-ordinator
   List *currentList = malloc(sizeof(List));
   
   if (currentList == NULL){
-    printf("Error allocating memory to list manager. \n");
+    printf("Error allocating memory.\n");
   }
   
   InitList(currentList);
@@ -40,6 +40,7 @@ int main(void){
 	EditDate(currentList,isNew);
 	EditPriority(currentList,isNew);
 	EditNotes(currentList,isNew);
+	DrawOutput(currentList);
 	break;
 	
       case 'F':

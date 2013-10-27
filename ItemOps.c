@@ -235,8 +235,7 @@ void EditNotes(List* List, unsigned char isNew){
   }
 }
 
-//Searches through items
-//Searches through items
+//Searches through items //TODO
 void SearchItems(List *List){
   
   //Declarations
@@ -256,7 +255,8 @@ void Undo(List *List){
   switch(List->undoMode){
     case 'A':
 		//remove item, but without keeping history
-		UnlinkItem(List);
+		List->undoMode = 'X'; //eXcise - remove without history
+		RemoveItem(List);
 		break;
 	case 'F':
 		MoveBack(List);

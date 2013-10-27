@@ -61,7 +61,10 @@ void RemoveItem(List *List){
   
   //Checks to see if node under cursor exists
   if (List->m_cursor != NULL){
-    
+
+//if List->undoMode = 'X', don't write history  
+  //Otherwise, write m_cursor to m_backup //TODO
+  
     //Special case for single nodes
     if ((List->m_cursor)->prev == NULL && (List->m_cursor)->next == NULL){
       List->m_first=NULL;
@@ -97,7 +100,7 @@ void RemoveItem(List *List){
 	List->m_cursor=current->prev;
       }
     
-    //TODO: Commit changes to history
+
     DrawOutput(List); //Draws output only if a node is removed
   
     }
@@ -206,9 +209,7 @@ void MoveForward(List *List){
   if (List->m_cursor != List->m_last){
     List->m_cursor = (List->m_cursor)->next;
   }
-    
-  //TODO: Commit changes to history
-  
+  List->undoMode = 'F';  
   DrawOutput(List); 
 }
 
@@ -217,8 +218,7 @@ void MoveBack(List *List){
   if (List->m_cursor != List->m_first){
     List->m_cursor = (List->m_cursor)->prev;
   }
-  
-  //TODO: Commit changes to history
+  List->undoMode = 'B';
   
   DrawOutput(List); 
 }
@@ -226,8 +226,7 @@ void MoveBack(List *List){
 //Toggles Print Item mode
 void ModePrint(List *List){
   List->printMode='P';
-  
-  //TODO: Commit changes to history
+  List->undoMode = 'P';
   
   DrawOutput(List);
 }
@@ -235,8 +234,7 @@ void ModePrint(List *List){
 //Toggles List Item mode
 void ModeList(List *List){
   List->printMode='L';
-  
-  //TODO: Commit changes to history
+  List->undoMode = 'L';
   
   DrawOutput(List);
 }

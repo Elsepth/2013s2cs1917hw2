@@ -41,6 +41,10 @@ typedef char* Data;
 
 typedef struct item Item;
 struct item {
+	char y;
+	char m;
+	char d;
+	char c;
 	int id;
 	Item* prev;
 	Item* next;
@@ -85,10 +89,10 @@ int main( void ) {
 	char* textBuffer = (char *)malloc(MAX_TEXT);
 	
 	//Declare some test strings;
-	char testTask[] = "Sample Task";
-	char testDate[] = "04/06/44";
-	char testClass[] = "Completed "; //10
-	char testNotes[] = "Sample Notes:\nA rose is a rose is a rose is a rose.\n42";
+	//char testTask[] = "Sample Task";
+	//char testDate[] = "04/06/44";
+	//char testClass[] = "Completed "; //10
+	//char testNotes[] = "Sample Notes:\nA rose is a rose is a rose is a rose.\n42";
 	//Declare backup strings;
 	char* taskBackup = (char *)malloc(MAX_LINE);
 	char* dateBackup = (char *)malloc(MAX_LINE);
@@ -105,10 +109,47 @@ int main( void ) {
 			case 'a': case 'A': //ADD ITEM
 				ptr = MakeItem();
 					ptr->id = i;
-					ptr->task = testTask;
-					ptr->date = testDate;
-					ptr->class = testClass;
-					ptr->notes = testNotes;
+					//ptr->task = testTask;
+					//ptr->date = testDate;
+					//ptr->class = testClass;
+					//ptr->notes = testNotes;
+					
+					//==========
+					printf("Task:  ");
+					ReadData( lineBuffer ); 
+					
+					ptr->task = (char*)malloc(strlen(lineBuffer));
+					strcpy(ptr->task,lineBuffer);
+					//==========
+					printf("Date:  ");
+					ReadData( lineBuffer );
+					while (!isDateValid(lineBuffer))
+					{
+						printf("Re-enter date in format dd/mm/yy: ");
+						ReadData( lineBuffer );
+					}
+				
+					ptr->date = (char*)malloc(strlen(lineBuffer));
+					strcpy(ptr->date,lineBuffer);
+					//==========
+					printf("Class: ");
+					ReadData( lineBuffer ); 
+					while (!isClassValid(lineBuffer))
+					{
+						printf("Enter H,M,L or C: ");
+						ReadData( lineBuffer ); 
+					}
+					ptr->class = (char*)malloc(strlen(lineBuffer));
+					strcpy(ptr->class,lineBuffer);
+					//==========
+					printf("Notes:  ");
+					ReadData( lineBuffer ); 
+					
+					ptr->notes = (char*)malloc(strlen(lineBuffer));
+					strcpy(ptr->notes,lineBuffer);
+					//==========
+					
+					
 				target = Link(ptr,&list);
 				ptr = NULL;
 				PrintList (target, &list, mode);
@@ -198,6 +239,9 @@ int main( void ) {
 				strcpy(target->date,lineBuffer);
 				//*lineBuffer = "";
 				
+				Unlink(target,&list);
+				Link(target,&list);
+				
 				PrintList (target, &list, mode);undo = 'D';
 				break;
 				
@@ -212,9 +256,14 @@ int main( void ) {
 					ReadData( lineBuffer ); 
 				}
 				
+				Unlink(target,&list);
+				Link(target,&list);
+				
 				target->class = (char*)malloc(strlen(lineBuffer));
 				strcpy(target->class,lineBuffer);
 				//*lineBuffer = "";
+				
+				
 				
 				PrintList (target, &list, mode);undo = 'C';
 				break;
@@ -222,7 +271,7 @@ int main( void ) {
 			case 'n': case 'N': //EDIT NOTES
 				if (target == NULL)break;
 				
-				//LOTS OF LINES
+				/*
 				printf("Notes: ");
 				int l=0;
 				while
@@ -257,6 +306,16 @@ int main( void ) {
 				target->notes = (char*)malloc(strlen(textBuffer)); //just to be on the safe side
 				strncpy(target->notes,textBuffer,(strlen(textBuffer-2)));
 				//*lineBuffer = "";*textBuffer = "";
+				*/
+				
+				//Temporary fix, writes one line like EditTask
+				printf("Notes:  ");
+				ReadData( lineBuffer ); 
+				
+				target->notes = (char*)malloc(strlen(lineBuffer));
+				strcpy(target->notes,lineBuffer);
+				
+				
 				
 				PrintList (target, &list, mode);undo = 'N';
 				break;
@@ -497,6 +556,8 @@ Item* Link (Item* i, List* l){
 	}
 	return;
 }
+
+
 
 void ReadData( char* lineBuffer ){
 	char *lineBufferStart = lineBuffer;

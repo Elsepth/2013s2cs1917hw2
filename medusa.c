@@ -27,6 +27,7 @@ Quit -> Quits
 
 //TDCN entries in struct item have NO FUNCTION but to be printed. All logic is done with id, which is an integer concatenated from the date, class, and a unique id.
 //The date is 2 bytes - 7 bits for the year, 4 bits for the month, and 5 bits for the day. The unique ID is 2 bytes. These can be written as two shorts, I guess.
+//UPDATE it is now four chars and an int, making a long. Total of 8 bytes.
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -67,8 +68,8 @@ Item* Link ( Item* i, List* l );
 Item* Unlink (Item* i, List* l );
 
 void ReadData ( char* lineBuffer );
-int isDateValid ( char* lineBuffer );
-int isClassValid ( char* lineBuffer );
+int isDateValid ( char* l, Item* i );
+int isClassValid (char c, Item* i);
 
 void FreeList( Item *list );
 void FreeItem( Item *item );
@@ -83,6 +84,7 @@ int main( void ) {
 	Item* ptr = NULL;
 	Item* lonely = NULL; //after unlinked
 	int i;
+	char c;
 	char mode = 'L'; //USE CAPS
 	char undo = '0'; //USE CAPS
 	char* lineBuffer = (char *)malloc(MAX_LINE);
@@ -123,7 +125,7 @@ int main( void ) {
 					//==========
 					printf("Date:  ");
 					ReadData( lineBuffer );
-					while (!isDateValid(lineBuffer))
+					while (!isDateValid(lineBuffer, ptr))
 					{
 						printf("Re-enter date in format dd/mm/yy: ");
 						ReadData( lineBuffer );
@@ -131,16 +133,22 @@ int main( void ) {
 				
 					ptr->date = (char*)malloc(strlen(lineBuffer));
 					strcpy(ptr->date,lineBuffer);
+					//==now into id
+					
+					
 					//==========
 					printf("Class: ");
-					ReadData( lineBuffer ); 
-					while (!isClassValid(lineBuffer))
+					c = getchar();
+					while (!isClassValid(c, ptr))
 					{
 						printf("Enter H,M,L or C: ");
-						ReadData( lineBuffer ); 
+						c = getchar(); 
 					}
-					ptr->class = (char*)malloc(strlen(lineBuffer));
-					strcpy(ptr->class,lineBuffer);
+					//ptr->class = (char*)malloc(strlen(lineBuffer));
+					//strcpy(ptr->class,lineBuffer);
+					//==now into id
+					
+					
 					//==========
 					printf("Notes:  ");
 					ReadData( lineBuffer ); 
@@ -229,7 +237,7 @@ int main( void ) {
 				
 				printf("Date:  ");
 				ReadData( lineBuffer );
-				while (!isDateValid(lineBuffer))
+				while (!isDateValid(lineBuffer, target))
 				{
 					printf("Re-enter date in format dd/mm/yy: ");
 					ReadData( lineBuffer );
@@ -246,11 +254,11 @@ int main( void ) {
 				break;
 				
 			case 'c': case 'C': //EDIT CLASS //DONE
-				if (target == NULL)break;
+			/*	if (target == NULL)break;
 				
 				printf("Class: ");
 				ReadData( lineBuffer ); 
-				while (!isClassValid(lineBuffer))
+				while (!isClassValid(lineBuffer, target))
 				{
 					printf("Enter H,M,L or C: ");
 					ReadData( lineBuffer ); 
@@ -263,7 +271,7 @@ int main( void ) {
 				strcpy(target->class,lineBuffer);
 				//*lineBuffer = "";
 				
-				
+			*/	
 				
 				PrintList (target, &list, mode);undo = 'C';
 				break;
@@ -460,9 +468,11 @@ void FreeList( Item *list ){ //PORTED!!!
 }
 
 void FreeItem ( Item *item ){ //PORTED!!!
+//	printf("Item: %p",item);
+	if(item==NULL)return;
 	if(item->task !=NULL)free( item->task );
 	if(item->date !=NULL)free( item->date );
-	if(item->class !=NULL)free( item->class );
+	//if(item->class !=NULL)free( item->class );
 	if(item->notes !=NULL)free( item->notes );
 	free( item );
 }
@@ -537,6 +547,8 @@ Item* Link (Item* i, List* l){
 	Item goes to tail.
 	Item is somewhere between two other items.
 	*/
+	
+	
 	if (l->head == NULL && l->tail == NULL){ //then item shall be the new list
 		l->head = i; l->tail = i; return i;
 	}
@@ -552,19 +564,24 @@ Item* Link (Item* i, List* l){
 	}
 	else{ //item cannot be after tail, nor before head
 		Item* ptr = l->head;
+		
+		long* iid;
+		long* pid;
+		
 		for (; ptr != NULL ; ptr = ptr->next ){
-			if (i->id < ptr->id){
+			iid = (long*)i;
+			pid = (long*)ptr;
+			if (*iid < *pid){
 				i->next = ptr; i->prev = ptr->prev;
 				ptr->prev->next = i; ptr->prev = i;
 				return i;
 			}
 		}
+		printf("ID: %d \n",*iid);
 		return;
 	}
 	return;
 }
-
-
 
 void ReadData( char* lineBuffer ){
 	char *lineBufferStart = lineBuffer;
@@ -582,14 +599,58 @@ void ReadData( char* lineBuffer ){
 }
 
 
-int isDateValid ( char* lineBuffer ){
+
+
+int isDateValid ( char* l, Item* i ){
 	//LOGIC
+	
+	
+	
+	
 	return 1;
 }
 
-int isClassValid ( char* lineBuffer ){
-	//LOGIC
-	return 1;
+int isClassValid (char c, Item* i){
+	switch(c){
+	char*s;
+	case 'H':
+		i->c = 1;
+		s = "High";
+		i->class = s;
+		break;
+	case 'M':
+		i->c = 2;
+		s = "Medium";
+		i->class = s;
+		break;
+	case 'L':
+		i->c = 3;
+		s = "Low";
+		i->class = s;
+		break;
+	case 'C':
+		i->c = 4;
+		s = "Completed";
+		i->class = s;
+		break;
+	default:
+		return 0;
+	}
+return 1;
 }
 
 
+/*
+int isClassValid ( char* l, Item* i ){
+	//LOGIC
+	switch(*l){
+	
+	//strcmp(l,"H")
+	//strcmp(l,"M")
+	//strcmp(l,"L")
+	//strcmp(l,"C")
+	}
+	return 1;
+}
+
+*/

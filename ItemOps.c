@@ -7,9 +7,6 @@
 
 #include "hw2.h"
 
-//Local Function Prototypes
-//unsigned char date_ok(unsigned char day, unsigned char month, unsigned char year);
-
 //Reads a string from input and sets as the current item's Task Name
 void EditTask(List* List, unsigned char isNew){
   
@@ -61,20 +58,49 @@ void EditTask(List* List, unsigned char isNew){
   }
   
 }
-
-//Note to marker: all three date functions from hw2.c (get_date, scan_date and date_ok) have been combined into one function
-//This is to ensure consistency in operation with all other ItemOps functions
+/*
+  Note to marker: all three date functions from hw2.c (get_date, scan_date and date_ok) have been combined into one function 'EditDate'
+  This is to ensure consistency in operation with all other ItemOps functions
+*/
 
 //Reads a date in the format DD/MM/YY and sets as theh current item's Date
 void EditDate(List* List, unsigned char isNew){
   
   if(List->m_cursor != NULL){
     
-    printf("Setting default date.\n");
+    Date s;
+    unsigned char dateValid;
     
-    (List->m_cursor)->date.day=10;
-    (List->m_cursor)->date.month=11;
-    (List->m_cursor)->date.year=12;
+    printf("Date:");
+    scanf ("%d/%d/%d",&s.day,&s.month,&s.year);
+    s.year %= 100; //Truncates year to last two digits
+    
+    for (dateValid = 0;dateValid==0;){
+      
+     if (s.month == 1||s.month == 3||s.month == 5||s.month == 7||s.month == 9||s.month == 11){
+	if(s.day > 0 && s.day <=31){dateValid=1;}else{dateValid=0;}
+     }
+     if (s.month == 4||s.month == 6||s.month == 8||s.month == 10||s.month == 12){
+       if(s.day > 0 && s.day <=30){dateValid=1;}else{dateValid=0;}     
+     }
+     if (s.month == 2){
+       if(s.year % 4 == 0){
+	 if(s.day > 0 && s.day <=29){dateValid=1;}else{dateValid=0;}
+       }
+       else{
+	 if(s.day > 0 && s.day <=28){dateValid=1;}else{dateValid=0;}
+       }
+     }
+     if(dateValid == 0){
+       printf("Re-enter date in format dd/mm/yy:");
+       scanf ("%d/%d/%d",&s.day,&s.month,&s.year);
+     }
+    }
+    
+    (List->m_cursor)->date.day=s.day;
+    (List->m_cursor)->date.month=s.month;
+    (List->m_cursor)->date.year=s.year;
+    
     
     //Calls sorter to relocate node if necessary based on input
     SortItems(List);

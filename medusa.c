@@ -83,6 +83,7 @@ int main( void ) {
         Item* ptr = NULL;
         Item* lonely = NULL; //after unlinked
         int i;
+		char c;
         char mode = 'L'; //USE CAPS
         char undo = '0'; //USE CAPS
         char* lineBuffer = (char *)malloc(MAX_LINE);
@@ -110,12 +111,12 @@ int main( void ) {
                                         //==========
                                         printf("Date: ");
                                         ReadData( lineBuffer );
-                                        while ( ((!isDateValid(lineBuffer)))
+                                        while ((isDateValid(lineBuffer) != 0))
                                         {
                                                 printf("Re-enter date in format dd/mm/yy: ");
                                                 ReadData( lineBuffer );
                                         }
-                                
+										//(int)*ptr=(isDateValid(lineBuffer));
                                         ptr->date = (char*)malloc(strlen(lineBuffer));
                                         strcpy(ptr->date,lineBuffer);
                                         //==========

@@ -33,9 +33,9 @@ typedef struct date Date;
 //Structures
 
 struct date{
-  unsigned char day;
-  unsigned char month;
-  unsigned char year;
+  int day;
+  int month;
+  int year;
 };
 
 //struct history{

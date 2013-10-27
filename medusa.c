@@ -31,19 +31,23 @@ Quit -> Quits
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
+#include <string.h>
 #include <assert.h>
 
-//typedef char* Task;
-//typedef char* Note;
+#define MAX_LINE		 128
+#define MAX_TEXT		4096
+
+typedef char* Data;
 
 typedef struct item Item;
 struct item {
-	//int data;
 	int id;
 	Item* prev;
 	Item* next;
-	//Task task;
-	//Note note;
+	Data task;
+	Data date;
+	Data class;
+	Data notes;
 };
 
 typedef struct list List;
@@ -52,15 +56,20 @@ struct list{
 	Item* tail;
 };
 
+void PrintList (Item* target, List* list, char mode);
 
-Item* Link ( Item* i, List* l );
-Item* Unlink (Item* i, List* l ); //basically remove without bells and whistles
 Item* MakeItem ( void );
+Item* Link ( Item* i, List* l );
+Item* Unlink (Item* i, List* l );
+
+void ReadData ( char* lineBuffer );
+int isDateValid ( char* lineBuffer );
+int isClassValid ( char* lineBuffer );
 
 void FreeList( Item *list );
 void FreeItem( Item *item );
 
-void PrintList (Item* target, List* list, char mode);
+//void Search ( List* l );
 
 int main( void ) {
 	List list;
@@ -72,35 +81,59 @@ int main( void ) {
 	int i;
 	char mode = 'L'; //USE CAPS
 	char undo = '0'; //USE CAPS
+	char* lineBuffer = (char *)malloc(MAX_LINE);
+	char* textBuffer = (char *)malloc(MAX_TEXT);
+	
+	//Declare some test strings;
+	char testTask[] = "Sample Task";
+	char testDate[] = "04/06/44";
+	char testClass[] = "Completed "; //10
+	char testNotes[] = "Sample Notes:\nA rose is a rose is a rose is a rose.\n42";
+	//Declare backup strings;
+	char* taskBackup = (char *)malloc(MAX_LINE);
+	char* dateBackup = (char *)malloc(MAX_LINE);
+	Data classBackup = (char *)malloc(MAX_LINE);
+	Data notesBackup = (char *)malloc(MAX_TEXT);
+	
+	
 	for (i=1; i != 0; i++){
 		printf("Enter command (A,F,B,P,L,R,T,D,C,N,S,U,Q, H for Help): ");
 		char ch = getchar(); while( !isalpha(ch) &&( ch != '\n' )) {ch = getchar();} char op = ch;
 		while( ch != '\n' ) {ch = getchar();}
 		switch( op ) {
-			case 'a': case 'A': 
-				ptr = MakeItem(); ptr->id = i; target = Link(ptr,&list);
+			//========================================<CREATION>
+			case 'a': case 'A': //ADD ITEM
+				ptr = MakeItem();
+					ptr->id = i;
+					ptr->task = testTask;
+					ptr->date = testDate;
+					ptr->class = testClass;
+					ptr->notes = testNotes;
+				target = Link(ptr,&list);
 				ptr = NULL;
 				PrintList (target, &list, mode);
 				undo = 'A';
 				break;
-			case 'f': case 'F':
+			//========================================<NAVIGATION>
+			case 'f': case 'F': //FORWARD TARGET
 				undo = '0';
-				if (target == NULL){break;}//DO NOTHING
-				if (target->next == NULL){break;}//DO NOTHING
+				if (target == NULL)break;
+				if (target->next == NULL)break;
 				target = target->next;
 				PrintList (target, &list, mode);
 				undo = 'F';
 //				printf("%c \n",undo);
 				break;
-			case 'b': case 'B':
+			case 'b': case 'B': //BACKWARD TARGET
 				undo = '0';
-				if (target == NULL){break;}//DO NOTHING
-				if (target->prev == NULL){break;}//DO NOTHING
+				if (target == NULL)break;
+				if (target->prev == NULL)break;
 				target = target->prev;
 				PrintList (target, &list, mode);
 				undo = 'B';
 				break;
-			case 'p': case 'P':
+			//========================================<PRINT MODE>
+			case 'p': case 'P': //ITEM MODE
 				undo = '0';
 				if (mode == 'I'){break;}
 				mode = 'I';
@@ -108,15 +141,16 @@ int main( void ) {
 				PrintList (target, &list, mode);
 				undo = 'P';
 				break;
-			case 'l': case 'L':
+			case 'l': case 'L': //LIST MODE
 				undo = '0';
 				if (mode == 'L'){break;}
 				mode = 'L';
 				PrintList (target, &list, mode);
 				undo = 'L';
 				break;
-			case 'r': case 'R':
-				if (target == NULL){break;}//DO NOTHING
+			//========================================<REMOVAL>
+			case 'r': case 'R': //REMOVE TARGET
+				if (target == NULL)break;
 				if (lonely != NULL){FreeItem(lonely); lonely == NULL;}
 				/*cases:
 				Target is head
@@ -135,24 +169,82 @@ int main( void ) {
 				undo = 'R';
 				PrintList (target, &list, mode);
 				break;
+			//========================================<EDIT ITEMS>
+			case 't': case 'T': //EDIT TASK //TOTALLY EXPERIMENTAL //DONE
+				if (target == NULL)break;
 				
-			case 't': case 'T': //TODO
-				undo = 'T';
-				PrintList (target, &list, mode);
-				break;
-			case 'd': case 'D': //TODO
-				undo = 'D';
-				PrintList (target, &list, mode);
-				break;
-			case 'c': case 'C': //TODO
-				undo = 'C';
-				PrintList (target, &list, mode);
-				break;
-			case 'n': case 'N': //TODO
-				undo = 'N';
-				PrintList (target, &list, mode);
+				printf("Task:  ");
+				ReadData( lineBuffer ); 
+				
+				target->task = (char*)malloc(strlen(lineBuffer));
+				strcpy(target->task,lineBuffer);
+				//*lineBuffer = ""; //resets buffer
+				
+				PrintList (target, &list, mode);undo = 'T';
 				break;
 				
+			case 'd': case 'D': //EDIT DATE //DONE
+				if (target == NULL)break;
+				
+				printf("Date:  ");
+				ReadData( lineBuffer );
+				while (!isDateValid(lineBuffer))
+				{
+					printf("Re-enter date in format dd/mm/yy: ");
+					ReadData( lineBuffer );
+				}
+				
+				target->date = (char*)malloc(strlen(lineBuffer));
+				strcpy(target->date,lineBuffer);
+				//*lineBuffer = "";
+				
+				PrintList (target, &list, mode);undo = 'D';
+				break;
+				
+			case 'c': case 'C': //EDIT CLASS //DONE
+				if (target == NULL)break;
+				
+				printf("Class: ");
+				ReadData( lineBuffer ); 
+				while (!isClassValid(lineBuffer))
+				{
+					printf("Enter H,M,L or C: ");
+					ReadData( lineBuffer ); 
+				}
+				
+				target->class = (char*)malloc(strlen(lineBuffer));
+				strcpy(target->class,lineBuffer);
+				//*lineBuffer = "";
+				
+				PrintList (target, &list, mode);undo = 'C';
+				break;
+				
+			case 'n': case 'N': //EDIT NOTES
+				if (target == NULL)break;
+				
+				//LOTS OF LINES
+				printf("Notes: ");
+				while(0==0)
+				{
+					ReadData( lineBuffer ); 
+					if(lineBuffer != ".")
+					{
+						if( (strlen(textBuffer)+strlen(lineBuffer)) >= MAX_TEXT )
+						strncpy(textBuffer, lineBuffer, (MAX_TEXT - strlen(textBuffer)) );
+						printf("textBuffer MAX_TEXT reached. /n"); //DEBUG
+						break;
+						
+						strcat(textBuffer, lineBuffer);
+					}
+					else break;
+				}
+				target->notes = (char*)malloc(strlen(textBuffer)); //just to be on the safe side
+				strncpy(target->notes,textBuffer,(strlen(textBuffer-2)));
+				//*lineBuffer = "";*textBuffer = "";
+				
+				PrintList (target, &list, mode);undo = 'N';
+				break;
+				//========================================<UNDO>
 			case 'u': case 'U':
 //				printf("%c \n", undo);
 				switch (undo){//if undo fails, break
@@ -166,53 +258,47 @@ int main( void ) {
 						Unlink(ptr,&list);
 						ptr = NULL;
 
-						undo = 'U';
 						PrintList (target, &list, mode);
 						break;
 					case 'F':
-						if (target == NULL){break;}//DO NOTHING
-						//if (target->prev == NULL){break;}//DO NOTHING
+						if (target == NULL)break;
+						//if (target->prev == NULL)break;
 						target = target->prev;
-						undo = 'U';
 						PrintList (target, &list, mode);
 						break;
 					case 'B':
-						if (target == NULL){break;}//DO NOTHING
-						//if (target->next == NULL){break;}//DO NOTHING
+						if (target == NULL)break;
+						//if (target->next == NULL)break;
 						target = target->next;
-						undo = 'U';
 						PrintList (target, &list, mode);
 						break;
 					case 'R':
 						ptr = lonely; target = Link(ptr,&list);
 						ptr = NULL;
-						undo = 'U';
 						PrintList (target, &list, mode);
 						break;
 					case 'T': //TODO
-						undo = 'U';
 						PrintList (target, &list, mode);
 						break;
 					case 'C': //TODO
-						undo = 'U';
 						PrintList (target, &list, mode);
 						break;
 					case 'D': //TODO
-						undo = 'U';
 						PrintList (target, &list, mode);
 						break;
 					case 'N': //TODO
-						undo = 'U';
 						PrintList (target, &list, mode);
 						break;
 					default:
 					undo = 'U';
 					break;
 				}
+				undo = 'U';
 				break;
-				
+			//========================================<SEARCH>
 			case 's': case 'S': //TODO
 				break;
+			//========================================
 			case 'h': case 'H':
 				printf("\n");
 				printf(" A - Add item\n" );
@@ -231,10 +317,11 @@ int main( void ) {
 				printf(" H - Help\n");
 				printf("\n");
 				break;
-			
+			//========================================
 			case 'q': case 'Q':
 				if (lonely != NULL){FreeItem(lonely);}
-				FreeList (list.head);
+				//FreeList (list.head);
+				//free(lineBuffer);
 				return 0;
 				break;
 		}
@@ -242,36 +329,44 @@ int main( void ) {
 	}
 return 0;
 }
+
 void PrintList ( Item* target, List* list, char mode ){
 	Item* ptr = NULL;
-	if (mode == 'L'){
+	if (mode == 'L')
+	{
+		//char* shortClass = (char *)malloc(MAX_LINE);//because malloc(1); is silly and hilarious
+		char* shortClass;
 		for (ptr = list->head ; ptr != NULL ; ptr = ptr->next ){
+		//shortClass = "";
+		//strncpy(shortClass, ptr->class, 1);
+		shortClass = ptr->class;
 		if(ptr == target){printf("->");}else{printf("  ");}
-		printf("<Date><Class><%d><Task> \n", ptr->id);
+		printf("%s %c %d %s \n",ptr->date, *shortClass, ptr->id, ptr->task);
 		}
+		//free(shortClass);
 	}
+	
 	else if (mode == 'I'){
 		printf("ID:    ");
 			printf("%d",target->id);
 			printf("\n");
 		printf("Task:  ");
-	//		printf("%s",target->task);
+			printf("%s",target->task);
 			printf("\n");
 		printf("Date:  ");
-	//		printf("%s",target->date);
+			printf("%s",target->date);
 			printf("\n");
 		printf("Class: ");
-	//		printf("%s",target->class);
+			printf("%s",target->class);
 			printf("\n");
 		printf("Notes: ");
-	//		printf("%s",target->notes);
+			printf("%s",target->notes);
 			printf("\n");
 	}
 }
 	
-void FreeList( Item *list ){ //!!!
+void FreeList( Item *list ){ //PORTED!!!
   Item *item;
-
   while( list != NULL ) {
 	item = list;
 	list = list->next;
@@ -282,10 +377,12 @@ void FreeList( Item *list ){ //!!!
 	}
 }
 
-void FreeItem ( Item *item ){ //!!!
-   //free( item->task );
-   //free( item->notes );
-   free( item );
+void FreeItem ( Item *item ){ //PORTED!!!
+	if(item->task !=NULL)free( item->task );
+	if(item->date !=NULL)free( item->date );
+	if(item->class !=NULL)free( item->class );
+	if(item->notes !=NULL)free( item->notes );
+	free( item );
 }
 
 Item* MakeItem( void ){
@@ -385,133 +482,30 @@ Item* Link (Item* i, List* l){
 	return;
 }
 
-
-/*
-Item* Link (Item* i, List* l){
-	assert(i != NULL && l->head !=NULL && l->tail != NULL);
-	if (l->head == NULL && l->tail == NULL){ //then item shall be the new list
-		l->head = i; l->tail = i; return i;
+void ReadData( char* lineBuffer ){
+	char *lineBufferStart = lineBuffer;
+	char c;
+	c=getchar();
+	while(c!=EOF && c!='\n' && MAX_LINE>(lineBuffer-lineBufferStart) )
+	{
+	*lineBuffer=c;
+	lineBuffer++;
+	c=getchar();
 	}
-	else if ( i BEFORE l->head ){ //then item shall be the new head
-		l->head->prev = i; i->next = l->head;
-		l->head = i;
-		return i;
-	}
-	else if ( i AFTER l->tail ){ //then item shall be the new tail
-		l->tail->next = i; i->prev = l->tail;
-		l->tail = i;
-		return i;
-	}
-	else{ //item cannot be after tail, nor before head
-		Item* ptr = l->head;
-		for (; ptr != NULL ; ptr = ptr->next ){
-			if (i BEFORE ptr){
-				i->next = ptr; i->prev = ptr->prev;
-				ptr->prev->next = i; ptr->prev = i;
-				return i;
-			}
-		}
-		return;
-	}
+	*lineBuffer='\0';
+//	printf("\n[%s]\n",lineBufferStart);
 	return;
 }
-*/
 
 
-//Task GetTask( void );
-//Note GetNote( void );
-//int GetDate( void );
-//int GetType( void );
-//void Link ( Item* i ); //puts item into linked list, sorted
-//void Search ( Item* list );
-
-//int Bitwrite(int d, int c);
-
-
-
-//places
-
-/*
-void main (void){
-//Item* US; //UserSelect
-//Item* SS; //SystemSelect
-
-//Task rTask[128];
-//int rDate = 0;
-//int rType = 0;
-//Task rNote[4096];
-	
-	int ch; //Used with getchar only, ignore.
-	int op; // Switch Operator
-	int quit=0; //Loop Moderator
-
-	
-	//Loop asks user for input until given the command to quit
-	while( quit != 1 ) {
-		printf("Enter command (A,F,B,P,L,R,T,D,C,N,S,U,Q, H for Help): ");
-
-		ch = getchar();
-		while( !isalpha(ch) &&( ch != '\n' )) {ch = getchar();}
-		op = ch;
-		while( ch != '\n' ) {ch = getchar();} //Ignores further user input until 'Enter' is pressed
-		//do the thing to make op an uppercase character
-		switch( op ) {
-
-		case 'A': // Add new task
-			//case 'a': case 'A':
-			//	SS = CreateItem();
-				
-			//	rTask = GetTask();
-			//	rDate = GetDate();
-			//	rType = GetType();
-			//	rNote = GetNote();
-
-			//	printf("%s \n",rTask);
-			//	printf("%d \n",rDate);
-			//	printf("%d \n",rType);
-			//	printf("%s \n",rNote);
-				
-			//	SS->task = rTask;
-			//	SS->note = rNote;
-			//	SS->data = Bitwrite(rDate, rType);
-				
-			//	Link ( SS );
-			break;
-
-		case 'F': 			break;
-		case 'B': 			break;
-		
-		case 'P': 			break;
-		case 'L': 			break;
-		
-		case 'R': 			break;
-		
-		case 'T': 			break;
-		case 'D': 			break;
-		case 'C': 			break;
-		case 'N': 			break;
-			
-		case 'S': 			break;
-		case 'U': 			break;
-		case 'Q': 		quit=1; return (0);		break;
-		case 'H': 			break;
-		}
-		//if(op==AFBPLRTDCNU){//: Make this work.
-		
-		}
-
-	
-	
-	return;
-}
- 
-// Task GetTask
-
-Link ( Item* i ){
-	// what does it return? 
-	
+int isDateValid ( char* lineBuffer ){
+	//LOGIC
+	return 1;
 }
 
+int isClassValid ( char* lineBuffer ){
+	//LOGIC
+	return 1;
+}
 
-*/
 

@@ -12,7 +12,7 @@ void EditTask(List* List, unsigned char isNew){
   
   if(List->m_cursor != NULL){
     
-    printf("EditTask: feature not implemented'\n");
+    printf("EditTask: feature not implemented, assigning address as taskname'\n");
     
     //TODO: Commit changes to history
     
@@ -30,7 +30,10 @@ void EditDate(List* List, unsigned char isNew){
   
   if(List->m_cursor != NULL){
     
-    printf("EditDate: feature not implemented\n");
+    printf("EditDate: assigning default date of 10/11/12\n");
+    (List->m_cursor)->date.day=10;
+    (List->m_cursor)->date.month=11;
+    (List->m_cursor)->date.year=12;
     
     //Calls sorter to relocate node if necessary based on input
     SortItems(List);
@@ -51,7 +54,8 @@ void EditPriority(List* List, unsigned char isNew){
   
   if(List->m_cursor != NULL){
     
-    printf("EditPriority(Class): feature not implemented\n");
+    printf("EditPriority(Class) not implemented, assigning default value of 'H'\n");
+    (List->m_cursor)->tClass='H';
     
     //Calls sorter to relocate node if necessary based on input
     SortItems(List);

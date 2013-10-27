@@ -397,6 +397,7 @@ int main( void ) {
 				if (lonely != NULL){FreeItem(lonely);}
 				//FreeList (list.head);
 				//free(lineBuffer);
+				printf("Bye!\n");
 				return 0;
 				break;
 		}
@@ -411,17 +412,23 @@ void PrintList ( Item* target, List* list, char mode ){
 	{
 		//char* shortClass = (char *)malloc(MAX_LINE);//because malloc(1); is silly and hilarious
 		char* shortClass;
+		printf("\n");
+		printf("\n");		
 		for (ptr = list->head ; ptr != NULL ; ptr = ptr->next ){
 		//shortClass = "";
 		//strncpy(shortClass, ptr->class, 1);
 		shortClass = ptr->class;
 		if(ptr == target){printf("->");}else{printf("  ");}
 		printf("%s %c %d %s \n",ptr->date, *shortClass, ptr->id, ptr->task);
+		printf("\n");
+		printf("\n");
 		}
 		//free(shortClass);
 	}
 	
 	else if (mode == 'I'){
+		printf("\n");
+		printf("\n");
 		printf("ID:    ");
 			printf("%d",target->id);
 			printf("\n");
@@ -437,6 +444,8 @@ void PrintList ( Item* target, List* list, char mode ){
 		printf("Notes: ");
 			printf("%s",target->notes);
 			printf("\n");
+		printf("\n");
+		printf("\n");
 	}
 }
 	

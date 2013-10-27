@@ -134,14 +134,12 @@ int main( void ) {
                                         strcpy(ptr->date,lineBuffer);
                                         //==========
                                         printf("Class: ");
-                                        ReadData( lineBuffer );
-                                        while (!isClassValid(lineBuffer))
-                                        {
-                                                printf("Enter H,M,L or C: ");
-                                                ReadData( lineBuffer );
-                                        }
-                                        ptr->class = (char*)malloc(strlen(lineBuffer));
-                                        strcpy(ptr->class,lineBuffer);
+										c = getchar();
+										while (!isClassValid(c, ptr))
+										{
+											printf("Enter H,M,L or C: ");
+											c = getchar(); 
+										}
                                         //==========
                                         printf("Notes: ");
                                         ReadNotes( textBuffer );
@@ -249,13 +247,13 @@ int main( void ) {
                         case 'c': case 'C': //EDIT CLASS //DONE
                                 if (target == NULL)break;
                                 
-                                printf("Class: ");
-                                ReadData( lineBuffer );
-                                while (!isClassValid(lineBuffer))
-                                {
-                                        printf("Enter H,M,L or C: ");
-                                        ReadData( lineBuffer );
-                                }
+                               printf("Class: ");
+								c = getchar();
+								while (!isClassValid(c, ptr))
+								{
+									printf("Enter H,M,L or C: ");
+									c = getchar(); 
+								}
                                 
                                 Unlink(target,&list);
                                 Link(target,&list);

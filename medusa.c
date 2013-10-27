@@ -552,15 +552,10 @@ int isDateValid ( char* lineBuffer ){
 	int day;
 	int month;
 	int year;
-	char d[3]="";
-	char m[3]="";
-	char y[3]="";
-	y[0]=*s; y[1]=s++; y[2]='\0'; s++;
-	m[0]=*s; m[1]=s++; m[2]='\0'; s++;	
-	d[0]=*s; d[1]=s++; d[2]='\0'; 
-	year = (0=+y);
-	month = (0=+m);
-	day = (0=+d);
+	year=(*s-'0');	year=year*10;	s++;	year=(*s-'0');	s++;
+	month=(*s-'0'); month=month*10; s++; month=(*s-'0'); s++;	
+	day=(*s-'0'); day=day*10; s++; day=(*s-'0');  
+
 	
 	if(year > 99 || year < 0){return 0;}//rejects weird years
 	if(month > 12 || month < 1){return 0;}//rejects weird months

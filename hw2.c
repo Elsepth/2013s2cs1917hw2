@@ -36,10 +36,10 @@ int main(void){
       case 'A':
 	isNew=1;
 	NewItem(currentList);
-	//EditTask(currentList,isNew);
-	//EditDate(currentList,isNew);
-	//EditPriority(currentList,isNew);
-	//EditNotes(currentList,isNew);
+	EditTask(currentList,isNew);
+	EditDate(currentList,isNew);
+	EditPriority(currentList,isNew);
+	EditNotes(currentList,isNew);
 	break;
 	
       case 'F':

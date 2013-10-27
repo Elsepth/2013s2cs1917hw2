@@ -41,10 +41,7 @@ typedef char* Data;
 
 typedef struct item Item;
 struct item {
-        char y;
-        char m;
-        char d;
-        char c;
+        int dd;
         int id;
         Item* prev;
         Item* next;
@@ -109,17 +106,30 @@ int main( void ) {
                                         ptr->task = (char*)malloc(strlen(lineBuffer));
                                         strcpy(ptr->task,lineBuffer);
                                         //==========
+										
                                         printf("Date: ");
-                                        ReadData( lineBuffer );
+                                        /*
+										ReadData( lineBuffer );
                                         while ((isDateValid(lineBuffer) == 0))
                                         {
                                                 printf("Re-enter date in format dd/mm/yy: ");
                                                 ReadData( lineBuffer );
                                         }
 										//(int)*ptr=(isDateValid(lineBuffer));
-                                        ptr->date = (char*)malloc(strlen(lineBuffer));
+										ptr->date = (char*)malloc(strlen(lineBuffer));
                                         strcpy(ptr->date,lineBuffer);
-                                        //==========
+                                        */
+										for (i=0;c!='\n'&&c!=EOF&&i<6;){
+											if(1==isdigit(c)){
+												c=-'0';
+												i++;ptr->dd=+c;ptr->dd=ptr->dd*10;
+											}
+										}
+										
+										
+										
+										//==========
+										
                                         printf("Class: ");
 										c = getchar();
 										while (!isClassValid(c, ptr))
@@ -215,7 +225,7 @@ int main( void ) {
                                 
                                 printf("Date: ");
                                 ReadData( lineBuffer );
-                                while (!isDateValid(lineBuffer))
+                                //while (!isDateValid(lineBuffer))
                                 {
                                         printf("Re-enter date in format dd/mm/yy: ");
                                         ReadData( lineBuffer );
@@ -546,17 +556,29 @@ void ReadData( char* lineBuffer ){
         return;
 }
 
-
+/*
 int isDateValid ( char* lineBuffer ){
-	char* s = lineBuffer;
+	char* s[6];
+	char* l = lineBuffer;
 	int dateID=0;
 	int day;
 	int month;
 	int year;
-	year=(*s-'0');	year=year*10;	s++;	year=(*s-'0');	s++;
-	month=(*s-'0'); month=month*10; s++; month=(*s-'0'); s++;	
-	day=(*s-'0'); day=day*10; s++; day=(*s-'0');  
-
+	//year=(*s-'0');	year=year*10;	s++;	year=(*s-'0');	s++;
+	//month=(*s-'0'); month=month*10; s++; month=(*s-'0'); s++;	
+	//day=(*s-'0'); day=day*10; s++; day=(*s-'0');  
+	s[0]=l[0]-'0';
+	s[1]=l[1]-'0';
+	s[2]=l[3]-'0';
+	s[3]=l[4]-'0';
+	s[4]=l[6]-'0';
+	s[5]=l[7]-'0';
+	year = s[0]*10; year =+ s[1];
+	
+	
+	printf("%d|%d|%d\n",year,month,day);
+	
+	
 	
 	if(year > 99 || year < 0){return 0;}//rejects weird years
 	if(month > 12 || month < 1){return 0;}//rejects weird months
@@ -573,28 +595,30 @@ int isDateValid ( char* lineBuffer ){
 	dateID = ((((year*256)+month)*256)+day)*256;
 	return dateID; //make it return an int and write that int to the struct
 }
-
+*/
 
 int isClassValid (char c, Item* i){
 	switch(c){
 	char*s;
+	char* p;
 	case 'H':
-		i->c = 1;
+		p = i+6
+		*p = (char)1;
 		s = "High";
 		i->class = s;
 		break;
 	case 'M':
-		i->c = 2;
+		i+6 = 2;
 		s = "Medium";
 		i->class = s;
 		break;
 	case 'L':
-		i->c = 3;
+		i+6 = 3;
 		s = "Low";
 		i->class = s;
 		break;
 	case 'C':
-		i->c = 4;
+		(i+6) = 4;
 		s = "Completed";
 		i->class = s;
 		break;

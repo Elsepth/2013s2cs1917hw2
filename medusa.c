@@ -8,6 +8,7 @@ Add Edit(DC) Remove Undo
 Edit(TN) Undo
 */
 
+
 /*
 Add -> MakeItem -> Get(TDCN) -> Write(TDCN) -> Link(Sort)
 Undo(Add) -> Remove
@@ -70,7 +71,7 @@ int main( void ) {
 	Item* lonely = NULL; //after unlinked
 	int i;
 	char mode = 'L'; //USE CAPS
-	char undo = 0; //USE CAPS
+	char undo = '0'; //USE CAPS
 	for (i=1; i != 0; i++){
 		printf("Enter command (A,F,B,P,L,R,T,D,C,N,S,U,Q, H for Help): ");
 		char ch = getchar(); while( !isalpha(ch) &&( ch != '\n' )) {ch = getchar();} char op = ch;
@@ -83,15 +84,16 @@ int main( void ) {
 				undo = 'A';
 				break;
 			case 'f': case 'F':
-				undo = 0;
+				undo = '0';
 				if (target == NULL){break;}//DO NOTHING
 				if (target->next == NULL){break;}//DO NOTHING
 				target = target->next;
 				PrintList (target, &list, mode);
 				undo = 'F';
+//				printf("%c \n",undo);
 				break;
 			case 'b': case 'B':
-				undo = 0;
+				undo = '0';
 				if (target == NULL){break;}//DO NOTHING
 				if (target->prev == NULL){break;}//DO NOTHING
 				target = target->prev;
@@ -99,10 +101,19 @@ int main( void ) {
 				undo = 'B';
 				break;
 			case 'p': case 'P':
+				undo = '0';
+				if (mode == 'I'){break;}
+				mode = 'I';
+			//		printf("%c /n",mode);
 				PrintList (target, &list, mode);
+				undo = 'P';
 				break;
 			case 'l': case 'L':
+				undo = '0';
+				if (mode == 'L'){break;}
+				mode = 'L';
 				PrintList (target, &list, mode);
+				undo = 'L';
 				break;
 			case 'r': case 'R':
 				if (target == NULL){break;}//DO NOTHING
@@ -125,25 +136,25 @@ int main( void ) {
 				PrintList (target, &list, mode);
 				break;
 				
-			case 't': case 'T':
+			case 't': case 'T': //TODO
 				undo = 'T';
 				PrintList (target, &list, mode);
 				break;
-			case 'd': case 'D':
+			case 'd': case 'D': //TODO
 				undo = 'D';
 				PrintList (target, &list, mode);
 				break;
-			case 'c': case 'C':
+			case 'c': case 'C': //TODO
 				undo = 'C';
 				PrintList (target, &list, mode);
 				break;
-			case 'n': case 'N':
+			case 'n': case 'N': //TODO
 				undo = 'N';
 				PrintList (target, &list, mode);
 				break;
 				
 			case 'u': case 'U':
-				printf("%c \n", undo);
+//				printf("%c \n", undo);
 				switch (undo){//if undo fails, break
 					case 'A':
 						if (lonely != NULL){FreeItem(lonely); lonely == NULL;}
@@ -160,36 +171,37 @@ int main( void ) {
 						break;
 					case 'F':
 						if (target == NULL){break;}//DO NOTHING
-						if (target->prev == NULL){break;}//DO NOTHING
+						//if (target->prev == NULL){break;}//DO NOTHING
 						target = target->prev;
-						PrintList (target, &list, mode);
 						undo = 'U';
 						PrintList (target, &list, mode);
 						break;
 					case 'B':
 						if (target == NULL){break;}//DO NOTHING
-						if (target->next == NULL){break;}//DO NOTHING
+						//if (target->next == NULL){break;}//DO NOTHING
 						target = target->next;
 						undo = 'U';
 						PrintList (target, &list, mode);
 						break;
 					case 'R':
+						ptr = lonely; target = Link(ptr,&list);
+						ptr = NULL;
 						undo = 'U';
 						PrintList (target, &list, mode);
 						break;
-					case 'T':
+					case 'T': //TODO
 						undo = 'U';
 						PrintList (target, &list, mode);
 						break;
-					case 'C':
+					case 'C': //TODO
 						undo = 'U';
 						PrintList (target, &list, mode);
 						break;
-					case 'D':
+					case 'D': //TODO
 						undo = 'U';
 						PrintList (target, &list, mode);
 						break;
-					case 'N':
+					case 'N': //TODO
 						undo = 'U';
 						PrintList (target, &list, mode);
 						break;
@@ -199,7 +211,7 @@ int main( void ) {
 				}
 				break;
 				
-			case 's': case 'S':
+			case 's': case 'S': //TODO
 				break;
 			case 'h': case 'H':
 				printf("\n");
@@ -232,11 +244,28 @@ return 0;
 }
 void PrintList ( Item* target, List* list, char mode ){
 	Item* ptr = NULL;
-	if (mode = 'L'){
+	if (mode == 'L'){
 		for (ptr = list->head ; ptr != NULL ; ptr = ptr->next ){
 		if(ptr == target){printf("->");}else{printf("  ");}
 		printf("<Date><Class><%d><Task> \n", ptr->id);
 		}
+	}
+	else if (mode == 'I'){
+		printf("ID:    ");
+			printf("%d",target->id);
+			printf("\n");
+		printf("Task:  ");
+	//		printf("%s",target->task);
+			printf("\n");
+		printf("Date:  ");
+	//		printf("%s",target->date);
+			printf("\n");
+		printf("Class: ");
+	//		printf("%s",target->class);
+			printf("\n");
+		printf("Notes: ");
+	//		printf("%s",target->notes);
+			printf("\n");
 	}
 }
 	

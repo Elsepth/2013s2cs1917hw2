@@ -10,7 +10,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
-
+#include <assert.h>
 //Constant Definitions
 #define MAX_LINE	128
 #define MAX_TEXT	4096
@@ -33,9 +33,9 @@ typedef struct history History;
 //Structures
 
 struct date{
-  unsigned char day;
-  unsigned char month;
-  unsigned char year;
+  unsigned char d;
+  unsigned char m;
+  unsigned char y;
 };
 
 struct history{
@@ -46,10 +46,10 @@ struct history{
 
 //Structtype 'item' is a node item
 struct item{
-  char *task;
   Date date;
   char tClass;
   char isActive;
+  char *task;
   char *notes;
   Item *next;		//Pointer to the next item
   Item *prev;		//Pointer to the previous item
@@ -63,6 +63,7 @@ struct list{
   Item *m_cursor;	//Current selected item
   Item *m_prev;		//Previous selected item
   Item *m_undoTarget;	//Last thing that had something done to it
+  char undoType; //last thing that was done to something
   History *m_history;
 };
 

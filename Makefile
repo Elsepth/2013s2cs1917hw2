@@ -7,5 +7,16 @@
 CC = gcc
 FLAGS = -Wall -Werror
 
-hw2:$(OBJ)
+.PHONY: run
+.PHONY: debug
+.PHONY: clear
+
+hw2:$(OBJ) clear
 	$(CC) $(FLAGS) -o hw2 hw2.c ItemOps.c ListOps.c Output.c
+
+run:
+	./hw2
+debug:
+	gdb hw2
+clear:
+	clear

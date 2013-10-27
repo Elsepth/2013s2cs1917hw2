@@ -17,7 +17,7 @@ void InitList(List *List){
   List->m_undoTarget	= NULL;
   List->m_history 	= malloc(sizeof(History));
   if (List->m_history == NULL){
-    printf("Error allocating memory for list co-ordinator. \n");
+    printf("Error allocating memory.\n");
   }
 }
   
@@ -26,7 +26,7 @@ void NewItem(List *List){
   Item *temp;
   temp=malloc(sizeof(Item)); 
   if(temp == NULL){
-    printf("Memory allocation failed for new item.");
+    printf("Error allocating memory.");
   }
   
   //Appends information about the newly-created node to the list co-ordinator
@@ -55,7 +55,6 @@ void NewItem(List *List){
   List->m_cursor=temp;
   
   //TODO: Commit changes to history
-  DrawOutput(List);
   
 }
 
@@ -115,16 +114,11 @@ void SortItems(List *List){
   //What this function needs to do is take a look at the contents of List->m_cursor
   //and then decide where it fits in with the rest of the nodes.
   //The function then has to move the node (either by pointer manipulation, or by deleting and re-adding)
-  //into the new position. 
+  //into the new position.
   
   //If two tasks have the same date AND priority, the last added task takes precedence
   //If two tasks have the same date, the task with the higher priority takes precedence
   //Otherwise, tasks are sorted by date, with earliest first
-  
-  //This message can be removed once sorting is implemented 
-  printf("No sorting for you D:\n");
-  
-  //Note: this function relies on the calling function to update display using DrawOutput after sort
   
   //Unlink(target,&list);
   
@@ -155,8 +149,8 @@ void SortItems(List *List){
         }
    int *idA = (int*)List->m_cursor;
         
-		int* idF = (int*)List->m_first;
-		int* idL = (int*)List->m_last;
+                int* idF = (int*)List->m_first;
+                int* idL = (int*)List->m_last;
   //Link(target,&list);
         if (List->m_first == NULL && List->m_last == NULL){ //then item shall be the new list
                 List->m_first = List->m_cursor; List->m_last = List->m_cursor;
@@ -172,16 +166,16 @@ void SortItems(List *List){
         else{ //item cannot be after tail, nor before head
                 Item* ptr = List->m_first;
                 //int* idX;
-				for (; ptr != NULL ; ptr = ptr->next ){
-				int* idX = (int*)ptr;
-                        if ( *idA < *idX ){ 
+                                for (; ptr != NULL ; ptr = ptr->next ){
+                                int* idX = (int*)ptr;
+                        if ( *idA < *idX ){
                                 List->m_cursor->next = ptr; List->m_cursor->prev = ptr->prev;
                                 ptr->prev->next = List->m_cursor; ptr->prev = List->m_cursor;
                         }
                 }
         }
         return;
-  
+    //Note: this function relies on the calling function to update display using DrawOutput after sort
 }
 
 //Moves cursor to next item

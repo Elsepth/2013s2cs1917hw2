@@ -89,16 +89,8 @@ int main( void ) {
         char* lineBuffer = (char *)malloc(MAX_LINE);
         char* textBuffer = (char *)malloc(MAX_TEXT);
         
-        //Declare some test strings;
-        //char testTask[] = "Sample Task";
-        //char testDate[] = "04/06/44";
-        //char testClass[] = "Completed "; //10
-        //char testNotes[] = "Sample Notes:\nA rose is a rose is a rose is a rose.\n42";
-        //Declare backup strings;
-        char* taskBackup = (char *)malloc(MAX_LINE);
-        char* dateBackup = (char *)malloc(MAX_LINE);
-        Data classBackup = (char *)malloc(MAX_LINE);
-        Data notesBackup = (char *)malloc(MAX_TEXT);
+        //Declare backup string
+        Data Backup = (char *)malloc(MAX_TEXT);
         
         
         for (i=1; i != 0; i++){
@@ -110,11 +102,6 @@ int main( void ) {
                         case 'a': case 'A': //ADD ITEM
                                 ptr = MakeItem();
                                         ptr->id = i;
-                                        //ptr->task = testTask;
-                                        //ptr->date = testDate;
-                                        //ptr->class = testClass;
-                                        //ptr->notes = testNotes;
-                                        
                                         //==========
                                         printf("Task: ");
                                         ReadData( lineBuffer );
@@ -260,60 +247,17 @@ int main( void ) {
                                 
                                 target->class = (char*)malloc(strlen(lineBuffer));
                                 strcpy(target->class,lineBuffer);
-                                //*lineBuffer = "";
-                                
-                                
                                 
                                 PrintList (target, &list, mode);undo = 'C';
                                 break;
                                 
                         case 'n': case 'N': //EDIT NOTES
                                 if (target == NULL)break;
-                                
-                                /*
-                                printf("Notes: ");
-                                int l=0;
-                                while
-                                (
-                                *(( textBuffer + ( l=strlen(textBuffer) ) ) + 1 ) != '\n'
-                                &&
-                                *( textBuffer + ( l=strlen(textBuffer) ) ) != '.'
-                                &&
-                                *(( textBuffer + ( l=strlen(textBuffer) ) ) + 1 ) != '\n'
-                                )
-                                {
-                                        ReadData( lineBuffer );
-                                        printf("%s \n",lineBuffer);
-                                        //if(lineBuffer != ".")
-                                        //{
-                                                //if( (strlen(textBuffer)+strlen(lineBuffer)) > MAX_TEXT )
-                                                switch ( (strlen(textBuffer)+strlen(lineBuffer)) > MAX_TEXT )
-                                                {
-                                                //strncpy(textBuffer, lineBuffer, (MAX_TEXT - strlen(textBuffer)) );
-                                                case 1:
-                                                printf("textBuffer MAX_TEXT reached. /n"); //DEBUG
-                                                break;
-                                                
-                                                case 0:
-                                                strcat(textBuffer, lineBuffer);
-                                                strcat(textBuffer, "\n");
-                                                break;
-                                                }
-                                        //}
-                                        //if (lineBuffer == ".\0") {loop=1;}
-                                }
-                                target->notes = (char*)malloc(strlen(textBuffer)); //just to be on the safe side
-                                strncpy(target->notes,textBuffer,(strlen(textBuffer-2)));
-                                //*lineBuffer = "";*textBuffer = "";
-                                */
-                                
-                                //Temporary fix, writes one line like EditTask
+                               
                                 printf("Notes: ");
                                 ReadNotes( textBuffer );                              
                                 target->notes = (char*)malloc(strlen(textBuffer));
                                 strcpy(target->notes,textBuffer);
-                                
-                                
                                 
                                 PrintList (target, &list, mode);undo = 'N';
                                 break;
@@ -522,20 +466,6 @@ Item* Unlink (Item* i, List* l){
 
 Item* Link (Item* i, List* l){
         assert( i != NULL );
-        //assert( l->head != NULL );
-        //assert( l->tail != NULL);
-        /*
-        Takes as input the address of an item, the address of a list.
-        Sorts the item into the list.
-        returns the address of the item.
-        */
-        /*
-        Possible cases:
-        List is empty.
-        Item goes to head.
-        Item goes to tail.
-        Item is somewhere between two other items.
-        */
         if (l->head == NULL && l->tail == NULL){ //then item shall be the new list
                 l->head = i; l->tail = i; return i;
         }

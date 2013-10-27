@@ -421,7 +421,6 @@ void PrintList ( Item* target, List* list, char mode ){
 		if(ptr == target){printf("->");}else{printf("  ");}
 		printf("%s %c %d %s \n",ptr->date, *shortClass, ptr->id, ptr->task);
 		printf("\n");
-		printf("\n");
 		}
 		//free(shortClass);
 	}
@@ -444,7 +443,6 @@ void PrintList ( Item* target, List* list, char mode ){
 		printf("Notes: ");
 			printf("%s",target->notes);
 			printf("\n");
-		printf("\n");
 		printf("\n");
 	}
 }

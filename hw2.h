@@ -33,15 +33,15 @@ typedef struct history History;
 //Structures
 
 struct date{
-  unsigned char d;
-  unsigned char m;
-  unsigned char y;
+  unsigned char day;
+  unsigned char month;
+  unsigned char year;
 };
 
-struct history{
-  char actionType;
-  unsigned char undoable;
-  char printMode;
+//struct history{
+//  char actionType;
+//  unsigned char undoable;
+//  char printMode;
 };
 
 //Structtype 'item' is a node item
@@ -62,9 +62,8 @@ struct list{
   Item *m_last;		//Pointer to last item in list
   Item *m_cursor;	//Current selected item
   Item *m_prev;		//Previous selected item
-  Item *m_undoTarget;	//Last thing that had something done to it
-  char undoType; //last thing that was done to something
-  History *m_history;
+  char undoMode; //last thing that was done to something [A FB R TDCN Other]
+  Item *m_backup;
 };
 
 

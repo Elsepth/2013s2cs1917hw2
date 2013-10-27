@@ -1,20 +1,11 @@
-.PHONY: debug
-.PHONY: run
-.PHONY: clear
-.PHONY: edit
+#################################################
+# 	    hw2: ToDo List Manager   		#
+# Group 57		    			#
+# H. Lin(z3XXXXXXX) and A. Wang (z3xxxxxx) 	#
+#################################################
 
-make: clear medusa.c
-	gcc -g -o run.out medusa.c
+CC = gcc
+FLAGS = -Wall -Werror
 
-debug:
-	gdb run.out
-clear:
-	clear
-run:
-	./run.out
-edit:
-	vim Makefile
-medusa: clear
-	gcc -g -o run.out medusa.c
-prune: clear
-	gcc -g -o run.out prune.c
+hw2:$(OBJ)
+	$(CC) $(FLAGS) -o hw2 hw2.c ItemOps.c ListOps.c Output.c

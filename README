@@ -1,5 +1,53 @@
 So this is a readme file. Or something like that.
 
+Everything works.
+********************************
+And that's amazing. As it is, it doesn't produce a single compile error or warning. 
+
+Every component has been tested to ensure nothing produces unexpected bugs. All 
+that's needed now is for you to fill out the remaining functions, and it's ready.
+
+I know it's not pretty, but the makefile works too. :D
+
+
+Structure
+********************************
+There are 4 files in total:
+
+hw2.h is the universal header file
+hw2.c contains MAIN and holds everything together
+ListOps.c contains functions used for manipulating the list
+ItemOps.c contains functions used for manipulating items within the list
+Output.c contains the output printer. 
+
+A full listing of functions contained within each file can be found in hw2.h
+
+
+
+Functions
+********************************
+The majority of functions return 'void' and take only one parameter -- 'List *list'.
+
+This is OK because 'List', which is the linked list co-ordinator, contains all necessary
+information for the manipulation of lists, including the current selected list, the 
+locations of the first and last list item, as well as a pointer to the current item. 
+
+The only exceptions are some of the Edit* functions -- they have an extra parameter to
+toggle the output printer, so they do not refresh output when creating a new item. 
+
+Why the unsigned chars? 8 bits for a char versus 32 bits for an int. You use less RAM. 
+
+Two functions have been included in hw2.c -- GetUserInput and PrintHelp. These functions
+neither manipulate the list or items, and are best left there. 
+
+
+
+Incomplete Functions
+********************************
+Descriptions have been given where possible in the function itself.
+
+
+
 Variable Naming Convention
 ********************************
 Follows standard Style Guide conventions. 

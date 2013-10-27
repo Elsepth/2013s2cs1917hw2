@@ -226,7 +226,14 @@ void EditNotes(List* List, unsigned char isNew){
 }
 
 //Searches through items
+//Searches through items
 void SearchItems(List *List){
+  
+  //Declarations
+  char *s;
+  List *searchList=malloc(sizeof(List));
+  InitList(searchList);
+  
   printf("Search text:");
   
   //Search is not case-sensitive

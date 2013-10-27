@@ -407,6 +407,7 @@ return 0;
 }
 
 void PrintList ( Item* target, List* list, char mode ){
+		if(target==NULL)return;
         Item* ptr = NULL;
         if (mode == 'L')
         {

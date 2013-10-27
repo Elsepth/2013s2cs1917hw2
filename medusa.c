@@ -69,8 +69,7 @@ Item* Unlink (Item* i, List* l );
 void ReadData ( char* lineBuffer );
 void ReadNotes (char* lineBuffer);
 int isDateValid ( char* lineBuffer );
-int isClassValid ( char* lineBuffer );
-
+int isClassValid (char c, Item* i);
 void FreeList( Item *list );
 void FreeItem( Item *item );
 
@@ -111,7 +110,7 @@ int main( void ) {
                                         //==========
                                         printf("Date: ");
                                         ReadData( lineBuffer );
-                                        while (!isDateValid(lineBuffer))
+                                        while ( ((int)*ptr=isDateValid(lineBuffer))==0 )
                                         {
                                                 printf("Re-enter date in format dd/mm/yy: ");
                                                 ReadData( lineBuffer );
@@ -548,8 +547,35 @@ void ReadData( char* lineBuffer ){
 
 
 int isDateValid ( char* lineBuffer ){
-        //LOGIC
-        return 1;
+	char* s = lineBuffer;
+	int dateID=0;
+	int day;
+	int month;
+	int year;
+	char d[3]="";
+	char m[3]="";
+	char y[3]="";
+	y[0]=*s; y[1]=s++; y[2]='\0'; s++;
+	m[0]=*s; m[1]=s++; m[2]='\0'; s++;	
+	d[0]=*s; d[1]=s++; d[2]='\0'; 
+	year = (0=+y);
+	month = (0=+m);
+	day = (0=+d);
+	
+	if(year > 99 || year < 0){return 0;}//rejects weird years
+	if(month > 12 || month < 1){return 0;}//rejects weird months
+	if(day < 1){return 0;}//rejects negative days
+	if(month == 2){
+		if((year % 4) == 0 && (year % 100) != 0){//TODO what about 400 year cycle? 
+			if(day > 29){return 0;}
+		}else if(day > 28){return 0;}
+	}//rejects leap-year 30+ and otherwise 29+ feb days
+	if(month == 4 || month == 6 || month == 9 || month == 11){
+		if(day > 30){return 0;}}
+	if(day > 31){return 0;}//rejects dates that are out of month
+	
+	dateID = ((((year*256)+month)*256)+day)*256;
+	return dateID; //make it return an int and write that int to the struct
 }
 
 

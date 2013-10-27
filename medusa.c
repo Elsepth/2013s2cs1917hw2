@@ -111,7 +111,7 @@ int main( void ) {
                                         //==========
                                         printf("Date: ");
                                         ReadData( lineBuffer );
-                                        while ((isDateValid(lineBuffer) != 0))
+                                        while ((isDateValid(lineBuffer) == 0))
                                         {
                                                 printf("Re-enter date in format dd/mm/yy: ");
                                                 ReadData( lineBuffer );

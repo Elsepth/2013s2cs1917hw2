@@ -224,19 +224,35 @@ int main( void ) {
 				
 				//LOTS OF LINES
 				printf("Notes: ");
-				while(0==0)
+				int l=0;
+				while
+				( 
+				*(( textBuffer + ( l=strlen(textBuffer) ) ) + 1 ) != '\n'
+				&&
+				*( textBuffer + ( l=strlen(textBuffer) ) ) != '.'
+				&&
+				*(( textBuffer + ( l=strlen(textBuffer) ) ) + 1 ) != '\n'
+				)
 				{
 					ReadData( lineBuffer ); 
-					if(lineBuffer != ".")
-					{
-						if( (strlen(textBuffer)+strlen(lineBuffer)) >= MAX_TEXT )
-						strncpy(textBuffer, lineBuffer, (MAX_TEXT - strlen(textBuffer)) );
+					printf("%s \n",lineBuffer);
+					//if(lineBuffer != ".")
+					//{
+						//if( (strlen(textBuffer)+strlen(lineBuffer)) > MAX_TEXT )
+						switch ( (strlen(textBuffer)+strlen(lineBuffer)) > MAX_TEXT )
+						{
+						//strncpy(textBuffer, lineBuffer, (MAX_TEXT - strlen(textBuffer)) );
+						case 1:
 						printf("textBuffer MAX_TEXT reached. /n"); //DEBUG
 						break;
 						
+						case 0:
 						strcat(textBuffer, lineBuffer);
-					}
-					else break;
+						strcat(textBuffer, "\n");
+						break;
+						}
+					//}
+					//if (lineBuffer == ".\0") {loop=1;}
 				}
 				target->notes = (char*)malloc(strlen(textBuffer)); //just to be on the safe side
 				strncpy(target->notes,textBuffer,(strlen(textBuffer-2)));

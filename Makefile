@@ -3,8 +3,8 @@
 .PHONY: clear
 .PHONY: edit
 
-make: clear all.c
-	gcc -g -o run.out all.c
+make: clear medusa.c
+	gcc -g -o run.out medusa.c
 
 debug:
 	gdb run.out

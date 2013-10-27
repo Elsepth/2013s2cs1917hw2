@@ -144,10 +144,10 @@ int main( void ) {
                                         strcpy(ptr->class,lineBuffer);
                                         //==========
                                         printf("Notes: ");
-                                        ReadNotes( lineBuffer );
+                                        ReadNotes( textBuffer );
                                         
-                                        ptr->notes = (char*)malloc(strlen(lineBuffer));
-                                        strcpy(ptr->notes,lineBuffer);
+                                        ptr->notes = (char*)malloc(strlen(textBuffer));
+                                        strcpy(ptr->notes,textBuffer);
                                         //==========
                                         
                                         
@@ -311,9 +311,9 @@ int main( void ) {
                                 
                                 //Temporary fix, writes one line like EditTask
                                 printf("Notes: ");
-                                ReadNotes( lineBuffer );                              
-                                target->notes = (char*)malloc(strlen(lineBuffer));
-                                strcpy(target->notes,lineBuffer);
+                                ReadNotes( textBuffer );                              
+                                target->notes = (char*)malloc(strlen(textBuffer));
+                                strcpy(target->notes,textBuffer);
                                 
                                 
                                 
@@ -564,7 +564,7 @@ Item* Link (Item* i, List* l){
         return;
 }
 
-void ReadNotes(char* lineBuffer )
+void ReadNotes(char* textBuffer )
 {
   char buffer[MAX_TEXT];
   char *notes;
@@ -597,7 +597,7 @@ void ReadNotes(char* lineBuffer )
   }
   notes[i] = '\0'; // add end-of-string marker
 
-  *lineBuffer=*notes;
+  textBuffer=notes;
   
 }
 

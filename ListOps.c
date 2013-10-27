@@ -14,11 +14,7 @@ void InitList(List *List){
   List->m_last 		= NULL;
   List->m_cursor 	= NULL;
   List->m_prev 		= NULL;
-  List->m_undoTarget	= NULL;
-  List->m_history 	= malloc(sizeof(History));
-  if (List->m_history == NULL){
-    printf("Error allocating memory.\n");
-  }
+  List->m_backup	= NULL;
 }
   
 //Creates a new, unpopulated to-do item and attaches it to the current list.
@@ -120,6 +116,8 @@ void SortItems(List *List){
   //If two tasks have the same date, the task with the higher priority takes precedence
   //Otherwise, tasks are sorted by date, with earliest first
   
+  //Note: this function relies on the calling function to update display using DrawOutput after sort
+  
   //Unlink(target,&list);
   
   assert(List->m_cursor != NULL && List->m_first !=NULL && List->m_last != NULL);
@@ -175,7 +173,7 @@ void SortItems(List *List){
                 }
         }
         return;
-    //Note: this function relies on the calling function to update display using DrawOutput after sort
+  
 }
 
 //Moves cursor to next item

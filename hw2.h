@@ -14,13 +14,6 @@
 //Constant Definitions
 #define MAX_LINE	128
 #define MAX_TEXT	4096
-#define FALSE		0
-#define TRUE		1
-#define YY		0
-#define MM		1
-#define DD		2
-#define CLASS		3
-
 //Type Definitions
 //This section is currently empty.
 
@@ -31,7 +24,6 @@ typedef struct date Date;
 //typedef struct history History;
 
 //Structures
-
 struct date{
   int day;
   int month;

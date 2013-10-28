@@ -198,6 +198,24 @@ if(item != NULL)
 	}
 }
 
+//Searches through items
+void SearchItems(List *List){
+   
+  //1. Gets search mask from user
+  //2. Finds all nodes with possible matches
+  //3. Copies nodes to a separate working list
+  //4. Capitalises all matches
+  //5. Calls print on all items in working list
+  
+  List *searchList=malloc(sizeof(List));
+  
+  printf("Search text:");
+  char searchMask[MAX_LINE];
+  scanf("%s",searchMask);
+  
+  return;  
+}
+
 //Undoes the last action
 void Undo(List *cList){
   switch(cList->undoMode){
@@ -230,11 +248,7 @@ void Undo(List *cList){
   cList->undoMode = 'U';
   
   
- // DrawOutput(List);
+ DrawOutput(List);
 }
 
-//unsigned char date_ok(unsigned char day, unsigned char month, unsigned char year){
-  
-  //Verification for year value
-  
-//}
+

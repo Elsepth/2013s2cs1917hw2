@@ -67,6 +67,7 @@ void NewItem(List *List);
 void RemoveItem(List *List);
 
 //void SortItem(List *List);
+void CalcID (Item* i);
 void LinkItem(List *List);
 void UnlinkItem(List *List);
 
@@ -79,14 +80,14 @@ void FreeList(List *List);
 
 //Function Prototypes contained in ItemOps.c
 
-void EditTask(List *List, unsigned char isNew);
-void EditDate(List *List, unsigned char isNew);
-void EditPriority(List *List, unsigned char isNew);
-void EditNotes(List *List, unsigned char isNew);
+void EditTask(List* List, Item* item);
+void EditDate(List* List, Item* item);
+void EditPriority(List* cList, Item* item);
+void EditNotes(List* cList, Item* item);
 
-void SearchItems(List *List);
+//void SearchItems(List *List);
 
-void Undo(List *List);
+void Undo(List *cList);
 
 //Function Prototypes contained in Output.c
 void DrawOutput(List *List);

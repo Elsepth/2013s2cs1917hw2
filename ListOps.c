@@ -113,25 +113,34 @@ void RemoveItem(List *List){
   //Note: this function relies on the calling function to update display using DrawOutput after sort
 //}
 
+void CalcID (Item* i){
+	// assign values to id so can compare
+	i->id = i->date.year; i->id = i->id*265;
+	i->id = i->id + i->date.month; i->id = i->id*265;
+	i->id = i->id + i->date.day; i->id = i->id*265;
+	i->id = i->id + i->tClass;
+}
+
 void LinkItem(List *List){
 	Item* i = List->m_cursor;
 	if (List->undoMode == 'S'){i = List->m_buffer;}
 	
 	assert( i != NULL );
 	
-	//TODO: assign values to id so can compare
+	CalcID (i); //this is calculaed for every node when it is linked.
+	
 	if ( List->m_first == NULL &&  List->m_last == NULL){ //then item shall be the new list
-			 List->m_first = i;  List->m_last = i; return;
+			 List->m_first = i;  List->m_last = i; List->m_cursor = i; return;
 	}
 	else if ( i->id <  List->m_first->id ){ //then item shall be the new head
 		List->m_first->prev = i; i->next =  List->m_first;
 		List->m_first = i;
-		return;
+		List->m_cursor = i; return;
 	}
 	else if ( i->id >  List->m_last->id ){ //then item shall be the new tail
 		List->m_last->next = i; i->prev =  List->m_last;
 		List->m_last = i;
-		return;
+		List->m_cursor = i; return;
 	}
 	else{ //item cannot be after tail, nor before head
 			Item* ptr =  List->m_first;
@@ -139,7 +148,7 @@ void LinkItem(List *List){
 					if (i->id < ptr->id){
 							i->next = ptr; i->prev = ptr->prev;
 							ptr->prev->next = i; ptr->prev = i;
-							return;
+							List->m_cursor = i; return;
 					}
 			}
 			return;
@@ -147,6 +156,7 @@ void LinkItem(List *List){
 	return;	
 }
 void UnlinkItem(List *List){
+	 Item* i = List->m_cursor;
 	 assert(i != NULL &&  List->m_first !=NULL &&  List->m_last != NULL);
         if (i ==  List->m_first && i ==  List->m_last){//item is whole list
                  List->m_first = NULL;  List->m_last = NULL;

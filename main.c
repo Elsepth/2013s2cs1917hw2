@@ -14,7 +14,7 @@ int main(void){
   
   //Declaration for local variables -- case [select] and loop watchdog [exit]
   char select; 
-  unsigned char isNew; //Flag used to desginate newly-created items
+  //unsigned char isNew; //Flag used to desginate newly-created items
   unsigned char exit=0;
   
   //Declares and initialises list co-ordinator
@@ -34,16 +34,14 @@ int main(void){
     switch (select){
       
       case 'A':
-	isNew=1;
 	NewItem(currentList);//the way I did it in Medusa (which I think is better) was to not sort this list until it was filled out.
-	EditTask(currentList,isNew);
-	EditDate(currentList,isNew);
-	EditPriority(currentList,isNew);
-	EditNotes(currentList,isNew);
+	EditTask(currentList,currentList->m_buffer);
+	EditDate(currentList,currentList->m_buffer);
+	EditPriority(currentList,currentList->m_buffer);
+	EditNotes(currentList,currentList->m_buffer);
 	//LinkItem(currentList);
 	DrawOutput(currentList);
-	currentList.undoMode = 'A';
-	isNew=0; //robustness ho!
+	currentList->undoMode = 'A';
 	break;
 	
       case 'F':
@@ -67,31 +65,31 @@ int main(void){
 	break;
 	
       case 'T':
-	isNew=0;
-	EditTask(currentList,isNew);
+	EditTask(currentList,currentList->m_cursor);
 	DrawOutput(currentList);
 	break;
 	
       case 'D':
-	isNew=0;
-	EditDate(currentList,isNew);
+	UnlinkItem(currentList);
+	EditDate(currentList,currentList->m_cursor);
+	LinkItem(currentList);
 	DrawOutput(currentList);
 	break;
 	
       case 'C':
-	isNew=0;
-	EditPriority(currentList,isNew);
+    UnlinkItem(currentList);
+	EditPriority(currentList,currentList->m_cursor);
+	LinkItem(currentList);
 	DrawOutput(currentList);
 	break;
 	
       case 'N':
-	isNew=0;
-	EditNotes(currentList,isNew);
+	EditNotes(currentList,currentList->m_cursor);
 	DrawOutput(currentList);
 	break;
 	
       case 'S':
-	SearchItems(currentList);
+	//SearchItems(currentList);
 	break;
 	
       case 'U':

@@ -22,6 +22,11 @@ void EditTask(List* List, unsigned char isNew){
 	
 	//History TODO
 	//Copy m_cursor to m_backup
+
+//	List->m_cursor is the address of the item m_cursor.
+//	I want to write everything at m_cursor to m_backup
+	*List->m_backup = *List->m_cursor; //does this work?
+
 	List->undoMode = 'T';
 	
     // prompt user for input
@@ -51,10 +56,6 @@ void EditTask(List* List, unsigned char isNew){
     
     
     (List->m_cursor)->task=task;
-        
-    //Redraws output only if modifying an existing item
-    if (isNew==0){
-      DrawOutput(List);
     }
     
   }
@@ -66,12 +67,17 @@ void EditTask(List* List, unsigned char isNew){
 */
 
 //Reads a date in the format DD/MM/YY and sets as theh current item's Date
-void EditDate(List* List, unsigned char isNew){
+void EditDate(List* List, Item* Item){
   
-  if(List->m_cursor != NULL){
+  if(Item != NULL){
+  
+  //Logic
+  assume item is in list
+  copy item into list->m_buffer
+  write
     
-	//History TODO
-	//Copy m_cursor to m_backup
+	//History
+	*List->m_buffer = *List->m_cursor;
 	List->undoMode = 'D';
 	
     Date s;
@@ -106,16 +112,10 @@ void EditDate(List* List, unsigned char isNew){
     (List->m_cursor)->date.day=s.day;
     (List->m_cursor)->date.month=s.month;
     (List->m_cursor)->date.year=s.year;
-    
-    
-    
-  
-    //Redraws output only if modifying an existing item
-    if (isNew==0){
-      DrawOutput(List);
+   
     }else{
       //Calls sorter to relocate node if necessary based on input
-      SortItems(List);
+      SortItem(List);
 	}
     
   }
@@ -227,26 +227,8 @@ void EditNotes(List* List, unsigned char isNew){
     notes[i] = '\0'; // add end-of-string marker
     
     (List->m_cursor)->notes=notes;
-
-    //Redraws output only if modifying an existing item
-    if (isNew==0){
-      DrawOutput(List);
     }
   }
-}
-
-//Searches through items //TODO
-void SearchItems(List *List){
-  
-  //Declarations
-  char *s;
-  List *searchList=malloc(sizeof(List));
-  InitList(searchList);
-  
-  printf("Search text:");
-  
-  //Search is not case-sensitive
-  //Output to screen 'Print Item' format. See compiled example for reference. 
 }
 
 //Undoes the last action
@@ -266,7 +248,7 @@ void Undo(List *List){
 		break;
 	case 'R':
 		List->undoMode = 'S';//undoMode = reStore
-		Link (m_backup)
+		LinkItem(List);//link m_backup
 		break;
 	case 'T': case 'D': case 'C': case 'N':
 		UnlinkItem(List);
@@ -274,12 +256,13 @@ void Undo(List *List){
 		LinkItem(List);
 		break;
     default:
+    	break;
     
   }
   List->undoMode = 'U';
   
   
-  DrawOutput(List);
+ // DrawOutput(List);
 }
 
 //unsigned char date_ok(unsigned char day, unsigned char month, unsigned char year){

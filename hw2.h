@@ -38,6 +38,7 @@ struct date{
 
 //Structtype 'item' is a node item
 struct item{
+  int id;
   Date date;
   char tClass;
   char isActive;
@@ -55,7 +56,7 @@ struct list{
   Item *m_cursor;	//Current selected item
   Item *m_prev;		//Previous selected item
   char undoMode; //last thing that was done to something [A FB R TDCN Other]
-  Item *m_backup; //also stores new item before linking.
+  Item *m_buffer; //also stores new item before linking.
 };
 
 
@@ -65,7 +66,7 @@ void InitList(List *List);
 void NewItem(List *List);
 void RemoveItem(List *List);
 
-void SortItems(List *List);
+//void SortItem(List *List);
 void LinkItem(List *List);
 void UnlinkItem(List *List);
 

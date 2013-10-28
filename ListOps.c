@@ -14,44 +14,29 @@ void InitList(List *List){
   List->m_last 		= NULL;
   List->m_cursor 	= NULL;
   List->m_prev 		= NULL;
-  List->m_backup	= NULL;
+  List->m_buffer	= NULL;
 }
   
 //Creates a new, unpopulated to-do item and attaches it to the current list.
 void NewItem(List *List){
-  Item *temp;
-  temp=malloc(sizeof(Item)); 
-  if(temp == NULL){
+  Item *newItem;
+  newItem=malloc(sizeof(Item)); 
+  if(newItem == NULL){
     printf("Error allocating memory.");
   }
-  
-  //Appends information about the newly-created node to the list co-ordinator
-  if (List->m_first == NULL){
-    //If item is first in list, it is added to the list co-ordinator
-    List->m_first=temp;
-    //Sets 'previous item' pointer to NULL as item is first in list
-    temp->prev=NULL;
-  }
-  if (List->m_last != NULL){
-    //Last item of list becomes previous item of new node
-    temp->prev=List->m_last;
-    //New item becomes new last item.
-    List->m_last=temp;
-    //Next pointer of new item is null
-    temp->next=NULL;
-    //Next pointer of previous item set to point to temp
-    (temp->prev)->next=temp;
-  }
-  else{
-    //Sets new item to end of list
-    List->m_last=temp;
-  }
-  
-  //Sets currently selected item to newly-created node
-  List->m_cursor=temp;
-  
-  //TODO: Commit changes to history
-  
+  //Initialises values of newly created item
+  newItem->id=0;
+  newItem->date.day=0;
+  newItem->date.month=0;
+  newItem->date.year=0;
+  newItem->tClass=0;
+  newItem->isActive=0;
+  newItem->task=NULL;
+  newItem->notes=NULL;
+  newItem->next=NULL;
+  newItem->prev=NULL;
+  //Sets buffer to newly-created item
+  List->m_buffer=newItem;
 }
 
 //Removes the currently selected node, and joins the nodes either side.
@@ -62,8 +47,11 @@ void RemoveItem(List *List){
   //Checks to see if node under cursor exists
   if (List->m_cursor != NULL){
 
-//if List->undoMode = 'X', don't write history  
-  //Otherwise, write m_cursor to m_backup //TODO
+////if List->undoMode = 'X', don't write history  
+  //
+  //write m_cursor to m_buffer //
+  *List->m_buffer = *List->m_cursor;
+  List->undoMode = 'R';
   
     //Special case for single nodes
     if ((List->m_cursor)->prev == NULL && (List->m_cursor)->next == NULL){
@@ -107,8 +95,11 @@ void RemoveItem(List *List){
   }
 }
 
+
+
 //Sorts Items in some sort of order
-void SortItems(List *List){
+
+//void SortItem(List *List){
   
   //What this function needs to do is take a look at the contents of List->m_cursor
   //and then decide where it fits in with the rest of the nodes.
@@ -120,28 +111,11 @@ void SortItems(List *List){
   //Otherwise, tasks are sorted by date, with earliest first
   
   //Note: this function relies on the calling function to update display using DrawOutput after sort
-  
-	if(List->m_cursor != NULL){
-		Item* ptr = List->m_cursor;  
-		int alreadySorted = 1; //defaults to true
-		//Check that the node is not already sorted
-		if (ptr->next != NULL){
-			//TODO LOGIC
-		}
-		if (ptr->prev !=NULL){
-			//TODO LOGIC
-		}
-		
-		if (alreadySorted == 0){
-			UnlinkItem(List);
-			LinkItem(List);
-		}
-	}  
-}
+//}
 
 void LinkItem(List *List){
 	Item* i = List->m_cursor;
-	if (List->undoMode == 'S'){i = List->m_backup;}
+	if (List->undoMode == 'S'){i = List->m_buffer;}
 	
 	assert( i != NULL );
 	
@@ -150,14 +124,14 @@ void LinkItem(List *List){
 			 List->m_first = i;  List->m_last = i; return;
 	}
 	else if ( i->id <  List->m_first->id ){ //then item shall be the new head
-			 List->m_first->prev = i; i->next =  List->m_first;
-			 List->m_first = i;
-			return;
+		List->m_first->prev = i; i->next =  List->m_first;
+		List->m_first = i;
+		return;
 	}
 	else if ( i->id >  List->m_last->id ){ //then item shall be the new tail
-			 List->m_last->next = i; i->prev =  List->m_last;
-			 List->m_last = i;
-			return;
+		List->m_last->next = i; i->prev =  List->m_last;
+		List->m_last = i;
+		return;
 	}
 	else{ //item cannot be after tail, nor before head
 			Item* ptr =  List->m_first;

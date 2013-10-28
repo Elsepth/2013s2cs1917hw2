@@ -42,6 +42,7 @@ int main(void){
 	EditNotes(currentList,isNew);
 	//LinkItem(currentList);
 	DrawOutput(currentList);
+	currentList.undoMode = 'A';
 	isNew=0; //robustness ho!
 	break;
 	
@@ -68,21 +69,25 @@ int main(void){
       case 'T':
 	isNew=0;
 	EditTask(currentList,isNew);
+	DrawOutput(currentList);
 	break;
 	
       case 'D':
 	isNew=0;
 	EditDate(currentList,isNew);
+	DrawOutput(currentList);
 	break;
 	
       case 'C':
 	isNew=0;
 	EditPriority(currentList,isNew);
+	DrawOutput(currentList);
 	break;
 	
       case 'N':
 	isNew=0;
 	EditNotes(currentList,isNew);
+	DrawOutput(currentList);
 	break;
 	
       case 'S':

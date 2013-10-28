@@ -77,7 +77,7 @@ int main(void){
 	break;
 	
       case 'C':
-    UnlinkItem(currentList);
+    	nlinkItem(currentList);
 	EditPriority(currentList,currentList->m_cursor);
 	LinkItem(currentList);
 	DrawOutput(currentList);
@@ -89,7 +89,7 @@ int main(void){
 	break;
 	
       case 'S':
-	//SearchItems(currentList);
+	SearchItems(currentList);
 	break;
 	
       case 'U':

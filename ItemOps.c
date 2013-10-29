@@ -244,37 +244,40 @@ void SearchItems(List *List){
   return;  
 }
 
+
 //Undoes the last action
-void Undo(List* currentList){
-//currentList->undoMode='X'; //MOVE THIS TO INT MAIN ALL COMMANDS EXCEPT UNDO START WITH THIS
-switch(currentList->undoMode){
-case 'A':
-Remove(currentList); //Remove prints if successful, and can't fail here
-break;
-case 'R': 
-//add currentList->m_backup to currentList
-//currentList->m_cursor = currentList->m_backup;
-SortItem(currentList);
-//print the list //this and TDCN are the undo functions that don't already print
-break;
-case 'F':
-MoveBack(currentList);
-break;
-case 'B':
-MoveForward(currentList);
-break;
-case 'T': case 'N':
-*currentList->m_cursor = *currentList->m_backup;
-//print
-break;
-case 'D': case 'C':
-*currentList->m_cursor = *currentList->m_backup;
-SortItem(currentList);
-//print
-break;
-case default:
-break;
-}
-currentList->undoMode = 'U';
-return;
+void Undo(List* currentList)
+{
+	//currentList->undoMode='X'; //MOVE THIS TO INT MAIN ALL COMMANDS EXCEPT UNDO START WITH THIS
+	switch(currentList->undoMode)
+	{
+		case 'A':
+			Remove(currentList); //Remove prints if successful, and can't fail here
+			break;
+		case 'R': 
+			//add currentList->m_backup to currentList //TODO
+			currentList->m_cursor = currentList->m_backup;
+			SortItem(currentList);
+			DrawOutput(currentList); //this and TDCN are the undo functions that don't already print
+			break;
+		case 'F':
+			MoveBack(currentList);
+			break;
+		case 'B':
+			MoveForward(currentList);
+			break;
+		case 'T': case 'N':
+			*currentList->m_cursor = *currentList->m_backup;
+			DrawOutput(currentList);
+			break;
+		case 'D': case 'C':
+			*currentList->m_cursor = *currentList->m_backup;
+			SortItem(currentList);
+			DrawOutput(currentList);
+			break;
+		case default:
+			break;
+	}
+	currentList->undoMode = 'U';
+	return;
 }

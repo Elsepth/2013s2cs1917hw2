@@ -105,76 +105,34 @@ void RemoveItem(List *List){
 }
 
 //Sorts Items in some sort of order
-void SortItems(List *List){
-  
-  //What this function needs to do is take a look at the contents of List->m_cursor
-  //and then decide where it fits in with the rest of the nodes.
-  //The function then has to move the node (either by pointer manipulation, or by deleting and re-adding)
-  //into the new position.
-  
-  //If two tasks have the same date AND priority, the last added task takes precedence
-  //If two tasks have the same date, the task with the higher priority takes precedence
-  //Otherwise, tasks are sorted by date, with earliest first
-  
-  //Note: this function relies on the calling function to update display using DrawOutput after sort
-  
-  //Unlink(target,&list);
-  
-  assert(List->m_cursor != NULL && List->m_first !=NULL && List->m_last != NULL);
-       
-        if (List->m_cursor == List->m_first && List->m_cursor == List->m_last){//item is whole list
-                List->m_first = NULL; List->m_last = NULL;
-                List->m_cursor->prev = NULL; List->m_cursor->next = NULL;
-        }
-        else if (List->m_cursor->prev == NULL && List->m_cursor->next == NULL){ //item is already unlinked
-                return;
-        }
-        else if (List->m_cursor == List->m_first){ //item is head
-                List->m_first = List->m_cursor->next;
-                List->m_cursor->next->prev = NULL;
-                List->m_cursor->next = NULL;
-        }
-        else if (List->m_cursor == List->m_last){ //item is tail
-                List->m_last = List->m_cursor->prev;
-                List->m_cursor->prev->next = NULL;
-                List->m_cursor->prev = NULL;
-        }
-        else { //unlink normally
-                assert (List->m_cursor->prev != NULL || List->m_cursor->next != NULL);//neither should be NULL
-                List->m_cursor->prev->next = List->m_cursor->next;
-                List->m_cursor->next->prev = List->m_cursor->prev;
-                List->m_cursor->prev = NULL; List->m_cursor->next = NULL;
-        }
-   int *idA = (int*)List->m_cursor;
-        
-                int* idF = (int*)List->m_first;
-                int* idL = (int*)List->m_last;
-  //Link(target,&list);
-        if (List->m_first == NULL && List->m_last == NULL){ //then item shall be the new list
-                List->m_first = List->m_cursor; List->m_last = List->m_cursor;
-        }
-        else if ( *idA < *idF ){ //then item shall be the new head
-                List->m_first->prev = List->m_cursor; List->m_cursor->next = List->m_first;
-                List->m_first = List->m_cursor;
-        }
-        else if ( *idA > *idL ){ //then item shall be the new tail
-                List->m_last->next = List->m_cursor; List->m_cursor->prev = List->m_last;
-                List->m_last = List->m_cursor;
-        }
-        else{ //item cannot be after tail, nor before head
-                Item* ptr = List->m_first;
-                //int* idX;
-                                for (; ptr != NULL ; ptr = ptr->next ){
-                                int* idX = (int*)ptr;
-                        if ( *idA < *idX ){
-                                List->m_cursor->next = ptr; List->m_cursor->prev = ptr->prev;
-                                ptr->prev->next = List->m_cursor; ptr->prev = List->m_cursor;
-                        }
-                }
-        }
-        return;
-  
+void SortItem(List* currentList){
+//check that currentList items are valid
+
+//remove m_cursor from list
+
+Item* cItem = currentList->m_cursor;
+int cDay = cItem->date.day;
+int cMonth = cItem->date.month;
+int cYear = cItem->date.year;
+int cClass = cItem->tClass;
+
+Item* sItem = currentList->m_last;
+int sDay; int sMonth; int sYear; int sClass;
+//write cItem after the first sItem that goes BEFORE cItem
+for (;sItem != NULL; sItem = sItem->prev){
+sDay = sItem->date.day;
+... ... ...;
+if(cYear>sYear){//write cItem after sItem; return;}
+else if (cYear==sYear){
+//the same code but for the other three variables
+
 }
+
+}
+//otherwise, write it at the beginning
+return;
+}
+
 
 //Moves cursor to next item
 void MoveForward(List *List){

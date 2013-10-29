@@ -73,7 +73,7 @@ void InitList(List *List);
 void NewItem(List *List);
 void RemoveItem(List *List);
 
-void SortItems(List *List);
+void SortItem(List *currentList);
 
 void MoveForward(List *List);
 void MoveBack (List *List);
@@ -91,7 +91,7 @@ void EditNotes(List *List, unsigned char isNew);
 
 void SearchItems(List *List);
 
-void Undo(List *List);
+void Undo(List *currentList);
 
 //Function Prototypes contained in Output.c
 void DrawOutput(List *List);

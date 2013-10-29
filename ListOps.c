@@ -174,9 +174,9 @@ void SortItem(List* currentList)
 		if
 		(
 			cYear>sYear ||
-			cYear==sYear && cMonth>sMonth ||
-			cYear==sYear && cMonth==sMonth && cDay>sDay ||
-			cYear==sYear && cMonth==sMonth && cDay==sDay && cClass>sClass
+			(cYear==sYear && cMonth>sMonth) ||
+			(cYear==sYear && cMonth==sMonth && cDay>sDay) ||
+			(cYear==sYear && cMonth==sMonth && cDay==sDay && cClass>sClass)
 		)
 		{
 			//write cItem after sItem; 

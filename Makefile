@@ -12,7 +12,7 @@ FLAGS = -Wall -Werror
 .PHONY: clear
 
 hw2:$(OBJ) clear
-	$(CC) $(FLAGS) -o hw2 hw2.c ItemOps.c ListOps.c Output.c
+	$(CC) $(FLAGS) -o hw2 main.c ItemOps.c ListOps.c Output.c
 
 run:
 	./hw2

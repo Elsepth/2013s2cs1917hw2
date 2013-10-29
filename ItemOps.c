@@ -103,7 +103,7 @@ void EditDate(List* List, unsigned char isNew){
     
     
     //Calls sorter to relocate node if necessary based on input
-    SortItems(List);
+    SortItem(List);
     
     //TODO: Commit changes to history
   
@@ -162,7 +162,7 @@ void EditPriority(List* List, unsigned char isNew){
       }
     
     //Calls sorter to relocate node if necessary based on input
-    SortItems(List);
+    SortItem(List);
     
     //TODO: Commit changes to history
     
@@ -235,7 +235,7 @@ void SearchItems(List *List){
   //4. Capitalises all matches
   //5. Calls print on all items in working list
   
-  List *searchList=malloc(sizeof(List));
+ // List *searchList=malloc(sizeof(List));
 
   printf("Search text:");
   char searchMask[MAX_LINE];
@@ -252,7 +252,7 @@ void Undo(List* currentList)
 	switch(currentList->undoMode)
 	{
 		case 'A':
-			Remove(currentList); //Remove prints if successful, and can't fail here
+			RemoveItem(currentList); //Remove prints if successful, and can't fail here
 			break;
 		case 'R': 
 			//add currentList->m_backup to currentList //TODO
@@ -275,7 +275,7 @@ void Undo(List* currentList)
 			SortItem(currentList);
 			DrawOutput(currentList);
 			break;
-		case default:
+		default:
 			break;
 	}
 	currentList->undoMode = 'U';

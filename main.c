@@ -35,55 +35,67 @@ int main(void){
       
       case 'A':
 	isNew=1;
+	currentList->undoMode='X';
 	NewItem(currentList);
 	EditTask(currentList,isNew);
 	EditDate(currentList,isNew);
 	EditPriority(currentList,isNew);
 	EditNotes(currentList,isNew);
+	currentList->undoMode='A';
 	DrawOutput(currentList);
 	break;
 	
       case 'F':
+	currentList->undoMode='F';
 	MoveForward(currentList);
 	break;
 	
       case 'B':
+	currentList->undoMode='B';
 	MoveBack(currentList);
 	break;
 	
       case 'P':
+	currentList->undoMode='X';
 	ModePrint(currentList);
 	break;
 	
       case 'L':
+	currentList->undoMode='X';
 	ModeList(currentList);
 	break;
 	
       case 'R':
+	currentList->undoMode='R';
 	RemoveItem(currentList);
 	break;
 	
       case 'T':
 	isNew=0;
+	currentList->undoMode='T';
 	EditTask(currentList,isNew);
 	break;
 	
       case 'D':
 	isNew=0;
+	currentList->undoMode='D';
 	EditDate(currentList,isNew);
 	break;
 	
       case 'C':
 	isNew=0;
+	currentList->undoMode='C';
 	EditPriority(currentList,isNew);
 	break;
 	
       case 'N':
 	isNew=0;
+	currentList->undoMode='N';
 	EditNotes(currentList,isNew);
 	break;
 	
       case 'S':
+	currentList->undoMode='X';
 	SearchItems(currentList);
 	break;
 	
@@ -92,6 +104,7 @@ int main(void){
 	break;
       
       case 'H':
+	currentList->undoMode='X';
 	PrintHelp();
 	break;
 	

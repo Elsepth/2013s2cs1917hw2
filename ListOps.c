@@ -104,34 +104,107 @@ void RemoveItem(List *List){
   }
 }
 
+
+
+
+
+
+
+
+
+
+
 //Sorts Items in some sort of order
-void SortItem(List* currentList){
-//check that currentList items are valid
+void SortItem(List* currentList)
+{
+	//check that currentList items are valid //TODO
 
-//remove m_cursor from list
+	
+	
+	//remove m_cursor from list
+	Item* cItem = currentList->m_cursor;
+	//if mcursor is the only item, YOU DON'T NEED TO SORT IT, HERP DERP
+	if( cItem == currentList->m_first && cItem == currentList->m_last )
+	{
+		return;
+	}
+	//else if mcursor is the first item
+	else if( cItem == currentList->m_first )
+	{
+		currentList->m_first = cItem->next;
+		currentList->m_first->prev = NULL;
+		cItem->next = NULL;
+	}
+	//else if mcursor is the last item
+	else if( cItem == currentList->m_last )
+	{
+		currentList->m_last = cItem->prev;
+		currentList->m_last->next = NULL;
+		cItem->prev = NULL;
+	}
+	//else if mcursor is a middle item
+	else
+	{
+		cItem->next->prev = cItem->next;
+		cItem->prev->next = cItem->prev;
+		cItem->next = NULL;
+		cItem->prev = NULL;//these NULLs aren't -really- necessary, but are probably good to have anyway.
+	}
+	
 
-Item* cItem = currentList->m_cursor;
-int cDay = cItem->date.day;
-int cMonth = cItem->date.month;
-int cYear = cItem->date.year;
-int cClass = cItem->tClass;
+	
+	int cDay = cItem->date.day;
+	int cMonth = cItem->date.month;
+	int cYear = cItem->date.year;
+	char cClass = cItem->tClass;
 
-Item* sItem = currentList->m_last;
-int sDay; int sMonth; int sYear; int sClass;
-//write cItem after the first sItem that goes BEFORE cItem
-for (;sItem != NULL; sItem = sItem->prev){
-sDay = sItem->date.day;
-... ... ...;
-if(cYear>sYear){//write cItem after sItem; return;}
-else if (cYear==sYear){
-//the same code but for the other three variables
+	Item* sItem = currentList->m_last;
+	int sDay; int sMonth; int sYear; char sClass;
+	
+	
+	
+	//write cItem after the first sItem that goes BEFORE cItem
+	for (;sItem != NULL; sItem = sItem->prev)
+	{
+		sDay = sItem->date.day;
+		sMonth = sItem->date.month;
+		sYear = sItem->date.year;
+		sClass = sItem->tClass;
+		
+		if
+		(
+			cYear>sYear ||
+			cYear==sYear && cMonth>sMonth ||
+			cYear==sYear && cMonth==sMonth && cDay>sDay ||
+			cYear==sYear && cMonth==sMonth && cDay==sDay && cClass>sClass
+		)
+		{
+			//write cItem after sItem; 
+			if(sItem->next !=NULL){
+				cItem->next = sItem->next;
+				sItem->next->prev = cItem;
+			}else{
+			currentList->m_last = cItem;
+			}
+			cItem->prev = sItem;
+			sItem->next = cItem;
+			currentList->m_cursor = cItem;
+			return;
+		}
+	}
+	//otherwise, write it at the beginning
+	sItem=currentList->m_first;
+	cItem->next = sItem;
+	sItem->prev = cItem;
+	currentList->m_first = cItem;
+	currentList->m_cursor = cItem;
+	return;
+
 
 }
 
-}
-//otherwise, write it at the beginning
-return;
-}
+
+
 
 
 //Moves cursor to next item
